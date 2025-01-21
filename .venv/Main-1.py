@@ -9,30 +9,31 @@ def zatwierdz_hrid():
         entry_serial.config(state="normal")
         entry_serial.focus()  # Ustawiamy kursor w polu numeru seryjnego
         label_serial.config(state="normal")
+        # Zablokowanie pola HRID po zatwierdzeniu
+        entry_hrid.config(state="disabled")
         messagebox.showinfo("Informacja", f"HRID {hrid} zatwierdzony. Możesz teraz wprowadzić numer seryjny.")
     else:
         messagebox.showwarning("Ostrzeżenie", "Wprowadź numer HRID przed zatwierdzeniem!")
 
 
 def zatwierdz_serial(event=None):
-    # Tylko wtedy, gdy pole numeru seryjnego jest aktywne, sprawdzamy jego długość
     serial = entry_serial.get()
 
-    # Jeśli pole numeru seryjnego ma dokładnie 12 znaków, zatwierdzamy numer
+    # Sprawdzamy, czy numer seryjny ma dokładnie 12 znaków
     if len(serial) == 12:
         # Wyświetlenie komunikatu o zatwierdzeniu numeru seryjnego
-        messagebox.showinfo("Informacja", "Numer seryjny zatwierdzony.")
+        show_message("Numer seryjny zatwierdzony")
         entry_serial.delete(0, tk.END)  # Czyszczenie pola numeru seryjnego po zapisaniu
         entry_serial.focus()  # Ustawienie kursora w polu numeru seryjnego
-        show_message("Numer seryjny prawidłowy")
     elif len(serial) > 12:
         messagebox.showwarning("Ostrzeżenie", "Numer seryjny nie może mieć więcej niż 12 znaków!")
 
 
 def show_message(message):
-    # Wyświetlenie komunikatu
+    # Wyświetlenie komunikatu w etykiecie
     label_message.config(text=message)
-    root.after(3000, clear_message)  # Po 3 sekundach czyszczenie komunikatu
+    # Po 3 sekundach czyszczenie komunikatu
+    root.after(3000, clear_message)
 
 
 def clear_message():
@@ -43,10 +44,10 @@ def clear_message():
 # Tworzenie głównego okna
 root = tk.Tk()
 root.title("Aplikacja HRID i numer seryjny")
-root.geometry("400x300")
+root.geometry("500x275")
 
 # Label i pole tekstowe dla HRID
-label_hrid = tk.Label(root, text="Wprowadź swój numer HRID, żeby rozpocząć pracę:")
+label_hrid = tk.Label(root, text="Wprowadź swój numer HRID, żeby rozpocząć pracę:", font=("Helvetica", 14, "bold"))
 label_hrid.pack(pady=10)
 
 entry_hrid = tk.Entry(root)
@@ -57,7 +58,7 @@ button_hrid = tk.Button(root, text="Zatwierdź", command=zatwierdz_hrid)
 button_hrid.pack(pady=10)
 
 # Label i pole tekstowe dla numeru seryjnego
-label_serial = tk.Label(root, text="Wprowadź numer seryjny (12 znaków):")
+label_serial = tk.Label(root, text="Wprowadź numer seryjny (12 znaków):",font=("Helvetica", 14, "bold"))
 label_serial.pack(pady=10)
 label_serial.config(state="disabled")  # Początkowo pole jest nieaktywne
 
