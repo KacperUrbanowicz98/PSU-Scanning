@@ -1,10 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox
 
-
 def zatwierdz_hrid():
     hrid = entry_hrid.get()
-    if hrid:
+    if hrid and (len(hrid) == 5 or len(hrid) == 8):
         # Aktywujemy pole do wprowadzania numeru seryjnego
         entry_serial.config(state="normal")
         entry_serial.focus()  # Ustawiamy kursor w polu numeru seryjnego
@@ -13,8 +12,7 @@ def zatwierdz_hrid():
         entry_hrid.config(state="disabled")
         messagebox.showinfo("Informacja", f"HRID {hrid} zatwierdzony. Możesz teraz wprowadzić numer seryjny.")
     else:
-        messagebox.showwarning("Ostrzeżenie", "Wprowadź numer HRID przed zatwierdzeniem!")
-
+        messagebox.showwarning("Ostrzeżenie", "Wprowadziłeś zły numer HRID. Spróbuj raz jeszcze.")
 
 def zatwierdz_serial(event=None):
     serial = entry_serial.get()
@@ -28,18 +26,15 @@ def zatwierdz_serial(event=None):
     elif len(serial) > 12:
         messagebox.showwarning("Ostrzeżenie", "Numer seryjny nie może mieć więcej niż 12 znaków!")
 
-
 def show_message(message):
     # Wyświetlenie komunikatu w etykiecie
     label_message.config(text=message)
     # Po 3 sekundach czyszczenie komunikatu
     root.after(3000, clear_message)
 
-
 def clear_message():
     label_message.config(text="")  # Usunięcie komunikatu
     entry_serial.focus()  # Ponowne ustawienie kursora w polu numeru seryjnego
-
 
 # Tworzenie głównego okna
 root = tk.Tk()
@@ -58,7 +53,7 @@ button_hrid = tk.Button(root, text="Zatwierdź", command=zatwierdz_hrid)
 button_hrid.pack(pady=10)
 
 # Label i pole tekstowe dla numeru seryjnego
-label_serial = tk.Label(root, text="Wprowadź numer seryjny (12 znaków):",font=("Helvetica", 14, "bold"))
+label_serial = tk.Label(root, text="Wprowadź numer seryjny (12 znaków):", font=("Helvetica", 14, "bold"))
 label_serial.pack(pady=10)
 label_serial.config(state="disabled")  # Początkowo pole jest nieaktywne
 
