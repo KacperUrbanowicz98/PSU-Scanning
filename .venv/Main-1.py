@@ -5,6 +5,12 @@ import csv
 import os
 from datetime import datetime
 
+# Lista akceptowanych HRID (z tabeli)
+VALID_HRID = {
+    "44963", "12100667", "81705", "45216", "45061", "12100171",
+    "12100741", "81560", "81563", "81564", "45233", "12101333"
+}
+
 # Ustawienia pliku
 MAX_ROWS = 1_048_576  # Maksymalna liczba wierszy w pliku CSV
 file_counter = 1  # Numer pliku (startujemy od 1)
@@ -12,7 +18,7 @@ current_file = f"dane_{file_counter}.csv"  # Aktualny plik CSV
 
 def zatwierdz_hrid():
     hrid = entry_hrid.get()
-    if hrid and (len(hrid) == 5 or len(hrid) == 8):
+    if hrid in VALID_HRID:  # Sprawdzamy, czy HRID jest na liście
         # Aktywujemy pole do wprowadzania numeru seryjnego
         entry_serial.config(state="normal")
         entry_serial.focus()  # Ustawiamy kursor w polu numeru seryjnego
@@ -21,7 +27,7 @@ def zatwierdz_hrid():
         entry_hrid.config(state="disabled")
         messagebox.showinfo("Informacja", f"HRID {hrid} zatwierdzony. Możesz teraz wprowadzić numer seryjny.")
     else:
-        messagebox.showwarning("Ostrzeżenie", "Wprowadziłeś zły numer HRID. Spróbuj raz jeszcze.")
+        messagebox.showwarning("Ostrzeżenie", "Wprowadziłeś nieprawidłowy HRID. Spróbuj raz jeszcze.")
 
 def zatwierdz_serial(event=None):
     serial = entry_serial.get()
@@ -137,13 +143,13 @@ button_wyloguj.place(x=10, y=305)
 # Ładowanie obrazu (logo)
 image_path = r"C:\Users\Kacper.Urbanowicz\PycharmProjects\PSU-Scanning\.venv\logo.png"  # Ścieżka do obrazu
 img = Image.open(image_path)
-img = img.resize((110, 45), Image.Resampling.LANCZOS)  # Zmieniamy rozmiar obrazka
+img = img.resize((110, 35), Image.Resampling.LANCZOS)  # Zmieniamy rozmiar obrazka
 photo = ImageTk.PhotoImage(img)
 
 # Label z obrazkiem w prawym dolnym rogu
 label_logo = tk.Label(root, image=photo)
 label_logo.image = photo  # Przechowujemy referencję do obrazu, aby go nie zgubić
-label_logo.place(x=385, y=295)  # Ustawienie w prawym dolnym rogu
+label_logo.place(x=385, y=305)  # Ustawienie w prawym dolnym rogu
 
 # Uruchomienie pętli głównej
 root.mainloop()
