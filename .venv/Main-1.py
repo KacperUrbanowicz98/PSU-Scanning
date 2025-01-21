@@ -8,7 +8,8 @@ from datetime import datetime
 # Lista akceptowanych HRID (z tabeli)
 VALID_HRID = {
     "44963", "12100667", "81705", "45216", "45061", "12100171",
-    "12100741", "81560", "81563", "81564", "45233", "12101333"
+    "12100741", "81560", "81563", "81564", "45233", "12101333",
+    "12101111",
 }
 
 # Ustawienia pliku
@@ -42,7 +43,7 @@ def zatwierdz_serial(event=None):
         zapis_do_csv(hrid, serial, current_date)
 
         # Wyświetlenie komunikatu o zatwierdzeniu numeru seryjnego (zielony, pogrubiony)
-        show_message("Numer seryjny zatwierdzony i zapisany", "green")
+        show_message("Numer seryjny zatwierdzony.", "green")
         entry_serial.delete(0, tk.END)  # Czyszczenie pola numeru seryjnego po zapisaniu
         entry_serial.focus()  # Ustawienie kursora w polu numeru seryjnego
     elif len(serial) > 12:
@@ -101,6 +102,7 @@ def wyloguj():
     label_serial.config(state="disabled")
     entry_hrid.delete(0, tk.END)  # Usunięcie wprowadzonego HRID
     messagebox.showinfo("Wylogowanie", "Zostałeś wylogowany. Wprowadź nowy HRID, aby rozpocząć pracę.")
+    entry_hrid.focus()  # Ustawienie kursora w polu HRID po wylogowaniu
 
 # Tworzenie głównego okna
 root = tk.Tk()
@@ -143,7 +145,7 @@ button_wyloguj.place(x=10, y=305)
 # Ładowanie obrazu (logo)
 image_path = r"C:\Users\Kacper.Urbanowicz\PycharmProjects\PSU-Scanning\.venv\logo.png"  # Ścieżka do obrazu
 img = Image.open(image_path)
-img = img.resize((110, 35), Image.Resampling.LANCZOS)  # Zmieniamy rozmiar obrazka
+img = img.resize((105, 35), Image.Resampling.LANCZOS)  # Zmieniamy rozmiar obrazka
 photo = ImageTk.PhotoImage(img)
 
 # Label z obrazkiem w prawym dolnym rogu
