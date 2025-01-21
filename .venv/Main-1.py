@@ -29,16 +29,16 @@ def zatwierdz_serial(event=None):
         # Zapisujemy dane do pliku CSV
         zapis_do_csv(hrid, serial, current_date)
 
-        # Wyświetlenie komunikatu o zatwierdzeniu numeru seryjnego
-        show_message("Numer seryjny zatwierdzony i zapisany")
+        # Wyświetlenie komunikatu o zatwierdzeniu numeru seryjnego (zielony, pogrubiony)
+        show_message("Numer seryjny zatwierdzony i zapisany", "green")
         entry_serial.delete(0, tk.END)  # Czyszczenie pola numeru seryjnego po zapisaniu
         entry_serial.focus()  # Ustawienie kursora w polu numeru seryjnego
     elif len(serial) > 12:
-        messagebox.showwarning("Ostrzeżenie", "Numer seryjny nie może mieć więcej niż 12 znaków!")
+        # Wyświetlenie ostrzeżenia (czerwony, pogrubiony)
+        show_message("Numer seryjny nie może mieć więcej niż 12 znaków!", "red")
 
 def zapis_do_csv(hrid, serial, date):
     file_name = "dane.csv"
-    # Sprawdzamy, czy plik już istnieje
     try:
         with open(file_name, mode='a', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
@@ -47,11 +47,12 @@ def zapis_do_csv(hrid, serial, date):
                 writer.writerow(["HRID", "Numer seryjny", "Data"])
             writer.writerow([hrid, serial, date])
     except Exception as e:
-        messagebox.showerror("Błąd", f"Nie udało się zapisać danych: {e}")
+        # Wyświetlenie błędu (czerwony, pogrubiony)
+        show_message("Nie udało się zapisać danych", "red")
 
-def show_message(message):
-    # Wyświetlenie komunikatu w etykiecie
-    label_message.config(text=message)
+def show_message(message, color):
+    # Wyświetlenie komunikatu w etykiecie z odpowiednim kolorem i stylem
+    label_message.config(text=message, fg=color, font=("Helvetica", 12, "bold"))
     # Po 3 sekundach czyszczenie komunikatu
     root.after(3000, clear_message)
 
@@ -70,7 +71,7 @@ def wyloguj():
 # Tworzenie głównego okna
 root = tk.Tk()
 root.title("Serializacja SP171")
-root.geometry("500x300")
+root.geometry("500x350")
 
 # Label i pole tekstowe dla HRID
 label_hrid = tk.Label(root, text="Wprowadź swój numer HRID, żeby rozpocząć pracę:", font=("Helvetica", 14, "bold"))
@@ -94,7 +95,7 @@ entry_serial = tk.Entry(root, font=("Helvetica", 16), width=18, state="disabled"
 entry_serial.pack(pady=5)
 
 # Label do wyświetlania komunikatów
-label_message = tk.Label(root, text="", font=("Helvetica", 14))
+label_message = tk.Label(root, text="", font=("Helvetica", 12))
 label_message.pack(pady=10)
 
 # Związanie naciśnięcia klawisza (z wyjątkiem Enter) z zatwierdzeniem numeru seryjnego
@@ -102,7 +103,7 @@ entry_serial.bind("<KeyRelease>", zatwierdz_serial)
 
 # Przycisk wylogowania (w lewym dolnym rogu)
 button_wyloguj = tk.Button(root, text="Wyloguj", font=("Helvetica", 12, "bold"), command=wyloguj)
-button_wyloguj.place(x=10, y=260)
+button_wyloguj.place(x=10, y=305)
 
 # Ładowanie obrazu (logo)
 image_path = r"C:\Users\Kacper.Urbanowicz\PycharmProjects\PSU-Scanning\.venv\logo.png"  # Ścieżka do obrazu
@@ -113,7 +114,7 @@ photo = ImageTk.PhotoImage(img)
 # Label z obrazkiem w prawym dolnym rogu
 label_logo = tk.Label(root, image=photo)
 label_logo.image = photo  # Przechowujemy referencję do obrazu, aby go nie zgubić
-label_logo.place(x=385, y=250)  # Ustawienie w prawym dolnym rogu
+label_logo.place(x=385, y=295)  # Ustawienie w prawym dolnym rogu
 
 # Uruchomienie pętli głównej
 root.mainloop()
