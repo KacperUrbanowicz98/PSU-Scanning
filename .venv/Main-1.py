@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
-from PIL import Image, ImageTk  # Importowanie biblioteki do obsługi obrazów
+from PIL import Image, ImageTk
+import csv
+from datetime import datetime
 
 def zatwierdz_hrid():
     hrid = entry_hrid.get()
@@ -17,15 +19,35 @@ def zatwierdz_hrid():
 
 def zatwierdz_serial(event=None):
     serial = entry_serial.get()
+    hrid = entry_hrid.get()
 
     # Sprawdzamy, czy numer seryjny ma dokładnie 12 znaków
     if len(serial) == 12:
+        # Pobieramy aktualną datę i czas
+        current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        # Zapisujemy dane do pliku CSV
+        zapis_do_csv(hrid, serial, current_date)
+
         # Wyświetlenie komunikatu o zatwierdzeniu numeru seryjnego
-        show_message("Numer seryjny zatwierdzony")
+        show_message("Numer seryjny zatwierdzony i zapisany")
         entry_serial.delete(0, tk.END)  # Czyszczenie pola numeru seryjnego po zapisaniu
         entry_serial.focus()  # Ustawienie kursora w polu numeru seryjnego
     elif len(serial) > 12:
         messagebox.showwarning("Ostrzeżenie", "Numer seryjny nie może mieć więcej niż 12 znaków!")
+
+def zapis_do_csv(hrid, serial, date):
+    file_name = "dane.csv"
+    # Sprawdzamy, czy plik już istnieje
+    try:
+        with open(file_name, mode='a', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            # Jeśli plik jest pusty, dodajemy nagłówki
+            if file.tell() == 0:
+                writer.writerow(["HRID", "Numer seryjny", "Data"])
+            writer.writerow([hrid, serial, date])
+    except Exception as e:
+        messagebox.showerror("Błąd", f"Nie udało się zapisać danych: {e}")
 
 def show_message(message):
     # Wyświetlenie komunikatu w etykiecie
@@ -85,13 +107,13 @@ button_wyloguj.place(x=10, y=260)
 # Ładowanie obrazu (logo)
 image_path = r"C:\Users\Kacper.Urbanowicz\PycharmProjects\PSU-Scanning\.venv\logo.png"  # Ścieżka do obrazu
 img = Image.open(image_path)
-img = img.resize((120, 50), Image.Resampling.LANCZOS)  # Zmieniamy rozmiar obrazka
+img = img.resize((110, 45), Image.Resampling.LANCZOS)  # Zmieniamy rozmiar obrazka
 photo = ImageTk.PhotoImage(img)
 
 # Label z obrazkiem w prawym dolnym rogu
 label_logo = tk.Label(root, image=photo)
 label_logo.image = photo  # Przechowujemy referencję do obrazu, aby go nie zgubić
-label_logo.place(x=400, y=220)  # Ustawienie w prawym dolnym rogu
+label_logo.place(x=385, y=250)  # Ustawienie w prawym dolnym rogu
 
 # Uruchomienie pętli głównej
 root.mainloop()
