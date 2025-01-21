@@ -2,7 +2,13 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
 import csv
+import os
 from datetime import datetime
+
+# Ustawienia pliku
+MAX_ROWS = 1_048_576  # Maksymalna liczba wierszy w pliku CSV
+file_counter = 1  # Numer pliku (startujemy od 1)
+current_file = f"dane_{file_counter}.csv"  # Aktualny plik CSV
 
 def zatwierdz_hrid():
     hrid = entry_hrid.get()
@@ -38,12 +44,34 @@ def zatwierdz_serial(event=None):
         show_message("Numer seryjny nie może mieć więcej niż 12 znaków!", "red")
 
 def zapis_do_csv(hrid, serial, date):
-    file_name = "dane.csv"
+    global file_counter, current_file
+    original_file = "dane.csv"  # Główny plik
+
+    # Sprawdzamy liczbę wierszy w bieżącym pliku (albo wracamy do oryginalnego)
+    if os.path.exists(original_file):
+        with open(original_file, 'r', encoding='utf-8') as file:
+            original_row_count = sum(1 for _ in file)
+        if original_row_count < MAX_ROWS:
+            current_file = original_file  # Wracamy do głównego pliku
+    else:
+        original_row_count = 0
+
+    # Jeśli bieżący plik osiągnął limit wierszy, tworzymy nowy plik
+    if os.path.exists(current_file):
+        with open(current_file, 'r', encoding='utf-8') as file:
+            current_row_count = sum(1 for _ in file)
+        if current_row_count >= MAX_ROWS:
+            file_counter += 1
+            current_file = f"dane_{file_counter}.csv"
+    else:
+        current_row_count = 0
+
+    # Zapis danych do wybranego pliku
     try:
-        with open(file_name, mode='a', newline='', encoding='utf-8') as file:
+        with open(current_file, mode='a', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             # Jeśli plik jest pusty, dodajemy nagłówki
-            if file.tell() == 0:
+            if current_row_count == 0:
                 writer.writerow(["HRID", "Numer seryjny", "Data"])
             writer.writerow([hrid, serial, date])
     except Exception as e:
@@ -77,9 +105,10 @@ root.geometry("500x350")
 label_hrid = tk.Label(root, text="Wprowadź swój numer HRID, żeby rozpocząć pracę:", font=("Helvetica", 14, "bold"))
 label_hrid.pack(pady=10)
 
-# Zwiększamy szerokość pola HRID
+# Pole tekstowe dla HRID
 entry_hrid = tk.Entry(root, font=("Helvetica", 16), width=18)  # Zwiększenie czcionki i szerokości
 entry_hrid.pack(pady=5)
+entry_hrid.focus()  # Ustawienie kursora w polu HRID
 
 # Przycisk zatwierdzenia HRID
 button_hrid = tk.Button(root, text="Zatwierdź", font=("Helvetica", 12, "bold"), command=zatwierdz_hrid)
@@ -90,7 +119,7 @@ label_serial = tk.Label(root, text="Zeskanuj numer seryjny (12 znaków):", font=
 label_serial.pack(pady=10)
 label_serial.config(state="disabled")  # Początkowo pole jest nieaktywne
 
-# Zwiększamy szerokość pola numeru seryjnego
+# Pole tekstowe dla numeru seryjnego
 entry_serial = tk.Entry(root, font=("Helvetica", 16), width=18, state="disabled")  # Zwiększenie czcionki i szerokości
 entry_serial.pack(pady=5)
 
