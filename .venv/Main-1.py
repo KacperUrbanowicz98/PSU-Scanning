@@ -55,20 +55,18 @@ def zatwierdz_hrid():
         messagebox.showwarning("Ostrzeżenie", "Wprowadziłeś nieprawidłowy HRID. Spróbuj raz jeszcze.")
 
 
-def zapis_do_csv(hrid, serial, date, wynik):
+def zapis_do_csv(hrid, serial, date, response_4, response_9, p3s_response, p4s_response, p5s_response):
     global file_counter, current_file
-    original_file = "dane.csv"  # Główny plik
+    original_file = "dane.csv"
 
-    # Sprawdzamy liczbę wierszy w bieżącym pliku (albo wracamy do oryginalnego)
     if os.path.exists(original_file):
         with open(original_file, 'r', encoding='utf-8') as file:
             original_row_count = sum(1 for _ in file)
         if original_row_count < MAX_ROWS:
-            current_file = original_file  # Wracamy do głównego pliku
+            current_file = original_file
     else:
         original_row_count = 0
 
-    # Jeśli bieżący plik osiągnął limit wierszy, tworzymy nowy plik
     if os.path.exists(current_file):
         with open(current_file, 'r', encoding='utf-8') as file:
             current_row_count = sum(1 for _ in file)
@@ -78,16 +76,13 @@ def zapis_do_csv(hrid, serial, date, wynik):
     else:
         current_row_count = 0
 
-    # Zapis danych do wybranego pliku
     try:
         with open(current_file, mode='a', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
-            # Jeśli plik jest pusty, dodajemy nagłówki
             if current_row_count == 0:
-                writer.writerow(["HRID", "Numer seryjny", "Data", "Wynik"])
-            writer.writerow([hrid, serial, date, wynik])
+                writer.writerow(["HRID", "Numer seryjny", "Data", "Napiecie bez obciazenia [V]", "Napiecie z obciazeniem [V]", "PIN 3", "PIN 4", "PIN 5"])
+            writer.writerow([hrid, serial, date, response_4, response_9, p3s_response, p4s_response, p5s_response])
     except Exception as e:
-        # Wyświetlenie błędu (czerwony, pogrubiony)
         show_message("Nie udało się zapisać danych", "red")
 
 
@@ -97,12 +92,11 @@ def handle_start():
 
     if len(serial_num) == 12:
         current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        zapis_do_csv(hrid, serial_num, current_date, "START")
-        show_message(f"Komenda START wysłana.", "green")
 
-        # Wysyłanie komend i zbieranie odpowiedzi
+        start_time = time.time()
+
         response_1 = send_command("AT+REL=0")
-        time.sleep(0.5)
+        time.sleep(0.1)
         response_2 = send_command("AT+MEAS=1")
         time.sleep(6)
         response_3 = send_command("AT+REL=0")
@@ -132,7 +126,11 @@ def handle_start():
         response_16 = send_command("AT+P5S?")
         time.sleep(0.1)
 
-        show_gavr_window(serial_num, response_4, response_9, response_14, response_15, response_16)  # Dodajemy odpowiedzi P3S, P4S, P5S
+        end_time = time.time()
+        duration = end_time - start_time
+
+        zapis_do_csv(hrid, serial_num, current_date, response_4, response_9, response_14, response_15, response_16)
+        show_gavr_window(serial_num, response_4, response_9, response_14, response_15, response_16, duration)
 
         entry_serial.delete(0, tk.END)
         entry_serial.focus()
@@ -164,23 +162,29 @@ def wyloguj():
 
 
 # Funkcja do wyświetlania nowego okna z wynikiem
-def show_gavr_window(serial_num, gavr_response_4, gavr_response_9, p3s_response, p4s_response, p5s_response):
+def show_gavr_window(serial_num, gavr_response_4, gavr_response_9, p3s_response, p4s_response, p5s_response, duration): # Dodajemy parametr duration
     match_4 = re.search(r"=\s*(\d+)", gavr_response_4)
     match_9 = re.search(r"=\s*(\d+)", gavr_response_9)
-    match_p3s = re.search(r"=\s*(\d+)", p3s_response)
-    match_p4s = re.search(r"=\s*(\d+)", p4s_response)
-    match_p5s = re.search(r"=\s*(\d+)", p5s_response)
+    match_p3s = re.search(r"=\s*(-?\d+)", p3s_response)
+    match_p4s = re.search(r"=\s*(-?\d+)", p4s_response)
+    match_p5s = re.search(r"=\s*(-?\d+)", p5s_response)
 
     if match_4 and match_9 and match_p3s and match_p4s and match_p5s:
         voltage_no_load = int(match_4.group(1)) / 1000
         voltage_with_load = int(match_9.group(1)) / 1000
-        p3s_value = int(match_p3s.group(1))
-        p4s_value = int(match_p4s.group(1))
-        p5s_value = int(match_p5s.group(1))
+
+        # Mapowanie odpowiedzi P3S, P4S, P5S na napisy
+        p3s_map = {0: "Zwarcie z masą", 1: "Zwarcie z VCC", 2: "Niepodłączony", -1: "Error"}
+        p4s_map = {0: "Zwarcie z masą", 1: "Zwarcie z VCC", 2: "Niepodłączony", -1: "Error"}
+        p5s_map = {0: "Zwarcie z masą", 1: "Zwarcie z VCC", 2: "Niepodłączony", -1: "Error"}
+
+        p3s_value = p3s_map.get(int(match_p3s.group(1)), "Nieznany wynik")
+        p4s_value = p4s_map.get(int(match_p4s.group(1)), "Nieznany wynik")
+        p5s_value = p5s_map.get(int(match_p5s.group(1)), "Nieznany wynik")
 
         new_window = tk.Toplevel(root)
         new_window.title("Wynik pomiaru")
-        new_window.geometry("450x400")  # Zwiększamy wysokość okna
+        new_window.geometry("450x430") # Zwiększamy wysokość okna
 
         label_result = tk.Label(new_window, text=f"Wynik dla numeru seryjnego {serial_num}:", font=("Helvetica", 14, "bold"))
         label_result.pack(pady=10)
@@ -199,6 +203,10 @@ def show_gavr_window(serial_num, gavr_response_4, gavr_response_9, p3s_response,
 
         label_p5s = tk.Label(new_window, text=f"P5S = {p5s_value}", font=("Helvetica", 12))
         label_p5s.pack(pady=5)
+
+        # Wyświetlanie czasu trwania pomiaru
+        label_duration = tk.Label(new_window, text=f"Czas pomiaru: {duration:.2f} s", font=("Helvetica", 10))
+        label_duration.pack(side=tk.LEFT, anchor=tk.SW, padx=10, pady=10)
 
         new_window.after(6000, new_window.destroy)
     else:
