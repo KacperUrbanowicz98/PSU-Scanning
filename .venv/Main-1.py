@@ -183,7 +183,7 @@ def wyloguj():
 
 
 # Funkcja do wyświetlania nowego okna z wynikiem
-def show_gavr_window(serial_num, gavr_response_4, gavr_response_9, p3s_response, p4s_response, p5s_response, duration): # Dodajemy parametr duration
+def show_gavr_window(serial_num, gavr_response_4, gavr_response_9, p3s_response, p4s_response, p5s_response, duration):
     match_4 = re.search(r"=\s*(\d+)", gavr_response_4)
     match_9 = re.search(r"=\s*(\d+)", gavr_response_9)
     match_p3s = re.search(r"=\s*(-?\d+)", p3s_response)
@@ -203,9 +203,10 @@ def show_gavr_window(serial_num, gavr_response_4, gavr_response_9, p3s_response,
         p4s_value = p4s_map.get(int(match_p4s.group(1)), "Nieznany wynik")
         p5s_value = p5s_map.get(int(match_p5s.group(1)), "Nieznany wynik")
 
+        # Tworzenie nowego okna
         new_window = tk.Toplevel(root)
         new_window.title("Wynik pomiaru")
-        new_window.geometry("450x430") # Zwiększamy wysokość okna
+        new_window.geometry("450x430")  # Zwiększamy wysokość okna
 
         label_result = tk.Label(new_window, text=f"Wynik dla numeru seryjnego {serial_num}:", font=("Helvetica", 14, "bold"))
         label_result.pack(pady=10)
@@ -216,22 +217,26 @@ def show_gavr_window(serial_num, gavr_response_4, gavr_response_9, p3s_response,
         label_voltage_with_load = tk.Label(new_window, text=f"Napięcie z obciążeniem = {voltage_with_load} V", font=("Helvetica", 12))
         label_voltage_with_load.pack(pady=5)
 
-        label_p3s = tk.Label(new_window, text=f"P3S = {p3s_value}", font=("Helvetica", 12))
+        # Zmieniamy kolor tekstu w zależności od wyniku P3S
+        label_p3s = tk.Label(new_window, text=f"P3S = {p3s_value}", font=("Helvetica", 12), fg="green" if p3s_value == "PASS" else "red")
         label_p3s.pack(pady=5)
 
-        label_p4s = tk.Label(new_window, text=f"P4S = {p4s_value}", font=("Helvetica", 12))
+        # Zmieniamy kolor tekstu w zależności od wyniku P4S
+        label_p4s = tk.Label(new_window, text=f"P4S = {p4s_value}", font=("Helvetica", 12), fg="green" if p4s_value == "PASS" else "red")
         label_p4s.pack(pady=5)
 
-        label_p5s = tk.Label(new_window, text=f"P5S = {p5s_value}", font=("Helvetica", 12))
+        # Zmieniamy kolor tekstu w zależności od wyniku P5S
+        label_p5s = tk.Label(new_window, text=f"P5S = {p5s_value}", font=("Helvetica", 12), fg="green" if p5s_value == "PASS" else "red")
         label_p5s.pack(pady=5)
 
         # Wyświetlanie czasu trwania pomiaru
         label_duration = tk.Label(new_window, text=f"Czas pomiaru: {duration:.2f} s", font=("Helvetica", 10))
         label_duration.pack(side=tk.LEFT, anchor=tk.SW, padx=10, pady=10)
 
-        new_window.after(6000, new_window.destroy)
+        new_window.after(6000, new_window.destroy)  # Zamykanie okna po 6 sekundach
     else:
         messagebox.showerror("Błąd", "Nie udało się wyodrębnić wyniku z odpowiedzi.")
+
 
 
 # Tworzenie głównego okna
