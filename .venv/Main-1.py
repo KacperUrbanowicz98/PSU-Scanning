@@ -77,13 +77,34 @@ def zapis_do_csv(hrid, serial, date, response_4, response_9, p3s_response, p4s_r
         current_row_count = 0
 
     try:
+        # Przetwarzanie odpowiedzi i przygotowanie wartości do zapisania
+        voltage_no_load = extract_value(response_4) / 1000  # Podziel przez 1000
+        voltage_with_load = extract_value(response_9) / 1000  # Podziel przez 1000
+        p3s_value = map_p3p4p5(extract_value(p3s_response))
+        p4s_value = map_p3p4p5(extract_value(p4s_response))
+        p5s_value = map_p3p4p5(extract_value(p5s_response))
+
         with open(current_file, mode='a', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             if current_row_count == 0:
                 writer.writerow(["HRID", "Numer seryjny", "Data", "Napiecie bez obciazenia [V]", "Napiecie z obciazeniem [V]", "PIN 3", "PIN 4", "PIN 5"])
-            writer.writerow([hrid, serial, date, response_4, response_9, p3s_response, p4s_response, p5s_response])
+            writer.writerow([hrid, serial, date, voltage_no_load, voltage_with_load, p3s_value, p4s_value, p5s_value])
     except Exception as e:
         show_message("Nie udało się zapisać danych", "red")
+
+def extract_value(response):
+    # Funkcja, która wyodrębnia wartość po znaku '='
+    match = re.search(r"=\s*(-?\d+\.?\d*)", response)
+    if match:
+        return float(match.group(1))
+    return 0.0  # Jeśli brak wartości, zwracamy 0.0
+
+def map_p3p4p5(value):
+    # Mapowanie wartości P3S, P4S, P5S na "PASS" lub "FAIL"
+    if value == 2:
+        return "PASS"
+    else:
+        return "FAIL"
 
 
 def handle_start():
