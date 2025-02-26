@@ -92,64 +92,50 @@ def zapis_do_csv(hrid, serial, date, wynik):
 
 
 def handle_start():
-    serial = entry_serial.get()
+    serial_num = entry_serial.get()
     hrid = entry_hrid.get()
 
-    if len(serial) == 12:
-        # Pobieramy aktualną datę i czas
+    if len(serial_num) == 12:
         current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        # Zapisujemy dane do pliku CSV
-        zapis_do_csv(hrid, serial, current_date, "START")
-
-        # Wyświetlenie komunikatu o zatwierdzeniu numeru seryjnego
+        zapis_do_csv(hrid, serial_num, current_date, "START")
         show_message(f"Komenda START wysłana.", "green")
 
-        # Wysyłanie komend do urządzenia na COM7
-        response_1 = send_command("AT+REL=0")  # Komenda AT+REL=0
-        time.sleep(1)
-        response_2 = send_command("AT+MEAS=1")  # Komenda AT+MEAS=1
+        # Wysyłanie komend i zbieranie odpowiedzi
+        response_1 = send_command("AT+REL=0")
+        time.sleep(0.5)
+        response_2 = send_command("AT+MEAS=1")
         time.sleep(6)
-        response_3 = send_command("AT+REL=0")  # Komenda AT+REL=0
-        time.sleep(1)
-        response_4 = send_command("AT+GAVR?")  # Komenda AT+GAVR?
-        time.sleep(1)
+        response_3 = send_command("AT+REL=0")
+        time.sleep(0.1)
+        response_4 = send_command("AT+GAVR?")
+        time.sleep(0.1)
         response_6 = send_command("AT+REL=1")
-        time.sleep(1)
+        time.sleep(0.1)
         response_7 = send_command("AT+MEAS=1")
-        time.sleep(7)
+        time.sleep(6)
         response_8 = send_command("AT+REL=0")
-        time.sleep(1)
+        time.sleep(0.1)
         response_9 = send_command("AT+GAVL?")
-        time.sleep(1)
+        time.sleep(0.1)
+        response_10 = send_command("AT+REL=0")
+        time.sleep(0.1)
+        response_11 = send_command("AT+REL=1")
+        time.sleep(0.1)
+        response_12 = send_command("AT+CHEP=1")
+        time.sleep(0.1)
+        response_13 = send_command("AT+REL=0")
+        time.sleep(0.1)
+        response_14 = send_command("AT+P3S?")
+        time.sleep(0.1)
+        response_15 = send_command("AT+P4S?")
+        time.sleep(0.1)
+        response_16 = send_command("AT+P5S?")
+        time.sleep(0.1)
 
+        show_gavr_window(serial_num, response_4, response_9, response_14, response_15, response_16)  # Dodajemy odpowiedzi P3S, P4S, P5S
 
-        # Sprawdzanie odpowiedzi z urządzenia
-        if response_1:
-            print(f"Odpowiedź z AT+REL=0: {response_1}")
-        if response_2:
-            print(f"Odpowiedź z AT+MEAS=1: {response_2}")
-        if response_3:
-            print(f"Odpowiedź z AT+REL=0: {response_3}")
-        if response_4:
-            print(f"Odpowiedź z AT+GAVR?: {response_4}")
-        if response_5:
-            print(f"Odpowiedź z AT+GTVR?: {response_5}")
-        if response_6:
-            print(f"Odpowiedź z AT+REL=1: {response_6}")
-        if response_7:
-            print(f"Odpowiedź z AT+MEAS=1: {response_7}")
-        if response_8:
-            print(f"Odpowiedź z AT+REL=0: {response_8}")
-        if response_9:
-            print(f"Odpowiedź z AT+GAVL?: {response_9}")
-
-
-        # Po wysłaniu wszystkich komend, wyświetlamy wynik
-        show_gavr_window(serial, response_4)
-
-        entry_serial.delete(0, tk.END)  # Czyszczenie pola numeru seryjnego po zapisaniu
-        entry_serial.focus()  # Ustawienie kursora w polu numeru seryjnego
+        entry_serial.delete(0, tk.END)
+        entry_serial.focus()
     else:
         show_message("Numer seryjny musi mieć dokładnie 12 znaków!", "red")
 
@@ -178,69 +164,45 @@ def wyloguj():
 
 
 # Funkcja do wyświetlania nowego okna z wynikiem
-# Funkcja do wyświetlania nowego okna z wynikiem
-def show_gavr_window(serial, gavr_response):
-    # Wyodrębnienie liczby z odpowiedzi AT+GAVR? za pomocą wyrażenia regularnego
-    match = re.search(r"=\s*(\d+)", gavr_response)
-    if match:
-        number = int(match.group(1))  # Liczba po znaku "="
-        result = number / 1000  # Dzielimy przez 1000 (V)
+def show_gavr_window(serial_num, gavr_response_4, gavr_response_9, p3s_response, p4s_response, p5s_response):
+    match_4 = re.search(r"=\s*(\d+)", gavr_response_4)
+    match_9 = re.search(r"=\s*(\d+)", gavr_response_9)
+    match_p3s = re.search(r"=\s*(\d+)", p3s_response)
+    match_p4s = re.search(r"=\s*(\d+)", p4s_response)
+    match_p5s = re.search(r"=\s*(\d+)", p5s_response)
 
-        # Tworzymy nowe okno
+    if match_4 and match_9 and match_p3s and match_p4s and match_p5s:
+        voltage_no_load = int(match_4.group(1)) / 1000
+        voltage_with_load = int(match_9.group(1)) / 1000
+        p3s_value = int(match_p3s.group(1))
+        p4s_value = int(match_p4s.group(1))
+        p5s_value = int(match_p5s.group(1))
+
         new_window = tk.Toplevel(root)
         new_window.title("Wynik pomiaru")
-        new_window.geometry("450x300")
+        new_window.geometry("450x400")  # Zwiększamy wysokość okna
 
-        # Label z numerem seryjnym
-        label_result = tk.Label(new_window, text=f"Wynik dla numeru seryjnego {serial}:",
-                                font=("Helvetica", 14, "bold"))
+        label_result = tk.Label(new_window, text=f"Wynik dla numeru seryjnego {serial_num}:", font=("Helvetica", 14, "bold"))
         label_result.pack(pady=10)
 
-        # Napięcie bez obciążenia
-        response_4 = send_command("AT+GAVR?")
-        if response_4:
-            match_4 = re.search(r"=\s*(\d+)", response_4)
-            if match_4:
-                voltage_no_load = int(match_4.group(1)) / 1000
-                label_voltage_no_load = tk.Label(new_window, text=f"Napięcie bez obciążenia = {voltage_no_load} V",
-                                                 font=("Helvetica", 12))
-                label_voltage_no_load.pack(pady=5)
+        label_voltage_no_load = tk.Label(new_window, text=f"Napięcie bez obciążenia = {voltage_no_load} V", font=("Helvetica", 12))
+        label_voltage_no_load.pack(pady=5)
 
-        # Napięcie z obciążeniem
-        response_9 = send_command("AT+GAVL?")
-        if response_9:
-            match_9 = re.search(r"=\s*(\d+)", response_9)
-            if match_9:
-                voltage_with_load = int(match_9.group(1)) / 1000
-                label_voltage_with_load = tk.Label(new_window, text=f"Napięcie z obciążeniem = {voltage_with_load} V",
-                                                   font=("Helvetica", 12))
-                label_voltage_with_load.pack(pady=5)
+        label_voltage_with_load = tk.Label(new_window, text=f"Napięcie z obciążeniem = {voltage_with_load} V", font=("Helvetica", 12))
+        label_voltage_with_load.pack(pady=5)
 
-        # Prąd z obciążeniem
-        response_11 = send_command("AT+GACL?")
-        if response_11:
-            match_11 = re.search(r"=\s*(\d+)", response_11)
-            if match_11:
-                current_with_load = int(match_11.group(1)) / 1000
-                label_current_with_load = tk.Label(new_window, text=f"Prąd z obciążeniem = {current_with_load} A",
-                                                   font=("Helvetica", 12))
-                label_current_with_load.pack(pady=5)
+        label_p3s = tk.Label(new_window, text=f"P3S = {p3s_value}", font=("Helvetica", 12))
+        label_p3s.pack(pady=5)
 
-        # Moc z obciążeniem
-        response_13 = send_command("AT+GAPL?")
-        if response_13:
-            match_13 = re.search(r"=\s*(\d+)", response_13)
-            if match_13:
-                power_with_load = int(match_13.group(1)) / 1000
-                label_power_with_load = tk.Label(new_window, text=f"Moc z obciążeniem = {power_with_load} W",
-                                                 font=("Helvetica", 12))
-                label_power_with_load.pack(pady=5)
+        label_p4s = tk.Label(new_window, text=f"P4S = {p4s_value}", font=("Helvetica", 12))
+        label_p4s.pack(pady=5)
 
-        # Zamknięcie okna po 6 sekundach
-        # new_window.after(6000, new_window.destroy)
+        label_p5s = tk.Label(new_window, text=f"P5S = {p5s_value}", font=("Helvetica", 12))
+        label_p5s.pack(pady=5)
+
+        new_window.after(6000, new_window.destroy)
     else:
-        messagebox.showerror("Błąd", "Nie udało się wyodrębnić wyniku z odpowiedzi AT+GAVR?")
-
+        messagebox.showerror("Błąd", "Nie udało się wyodrębnić wyniku z odpowiedzi.")
 
 
 # Tworzenie głównego okna
