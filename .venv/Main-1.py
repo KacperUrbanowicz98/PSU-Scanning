@@ -174,9 +174,9 @@ def show_gavr_window(serial_num, gavr_response_4, gavr_response_9, p3s_response,
         voltage_with_load = int(match_9.group(1)) / 1000
 
         # Mapowanie odpowiedzi P3S, P4S, P5S na napisy
-        p3s_map = {0: "Zwarcie z masą", 1: "Zwarcie z VCC", 2: "Niepodłączony", -1: "Error"}
-        p4s_map = {0: "Zwarcie z masą", 1: "Zwarcie z VCC", 2: "Niepodłączony", -1: "Error"}
-        p5s_map = {0: "Zwarcie z masą", 1: "Zwarcie z VCC", 2: "Niepodłączony", -1: "Error"}
+        p3s_map = {0: "FAIL", 1: "FAIL", 2: "PASS", -1: "FAIL"}
+        p4s_map = {0: "FAIL", 1: "FAIL", 2: "PASS", -1: "FAIL"}
+        p5s_map = {0: "FAIL", 1: "FAIL", 2: "PASS", -1: "FAIL"}
 
         p3s_value = p3s_map.get(int(match_p3s.group(1)), "Nieznany wynik")
         p4s_value = p4s_map.get(int(match_p4s.group(1)), "Nieznany wynik")
