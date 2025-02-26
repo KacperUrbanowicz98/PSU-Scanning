@@ -114,7 +114,15 @@ def handle_start():
         time.sleep(1)
         response_4 = send_command("AT+GAVR?")  # Komenda AT+GAVR?
         time.sleep(1)
-        response_5 = send_command("AT+GTVR?")  # Komenda AT+GTVR?
+        response_6 = send_command("AT+REL=1")
+        time.sleep(1)
+        response_7 = send_command("AT+MEAS=1")
+        time.sleep(7)
+        response_8 = send_command("AT+REL=0")
+        time.sleep(1)
+        response_9 = send_command("AT+GAVL?")
+        time.sleep(1)
+
 
         # Sprawdzanie odpowiedzi z urządzenia
         if response_1:
@@ -127,10 +135,18 @@ def handle_start():
             print(f"Odpowiedź z AT+GAVR?: {response_4}")
         if response_5:
             print(f"Odpowiedź z AT+GTVR?: {response_5}")
+        if response_6:
+            print(f"Odpowiedź z AT+REL=1: {response_6}")
+        if response_7:
+            print(f"Odpowiedź z AT+MEAS=1: {response_7}")
+        if response_8:
+            print(f"Odpowiedź z AT+REL=0: {response_8}")
+        if response_9:
+            print(f"Odpowiedź z AT+GAVL?: {response_9}")
 
-        # Wyświetlanie odpowiedzi w GUI
-        if response_4:
-            show_gavr_window(serial, response_4)
+
+        # Po wysłaniu wszystkich komend, wyświetlamy wynik
+        show_gavr_window(serial, response_4)
 
         entry_serial.delete(0, tk.END)  # Czyszczenie pola numeru seryjnego po zapisaniu
         entry_serial.focus()  # Ustawienie kursora w polu numeru seryjnego
@@ -162,32 +178,69 @@ def wyloguj():
 
 
 # Funkcja do wyświetlania nowego okna z wynikiem
+# Funkcja do wyświetlania nowego okna z wynikiem
 def show_gavr_window(serial, gavr_response):
     # Wyodrębnienie liczby z odpowiedzi AT+GAVR? za pomocą wyrażenia regularnego
     match = re.search(r"=\s*(\d+)", gavr_response)
     if match:
         number = int(match.group(1))  # Liczba po znaku "="
-        result = number / 1000  # Dzielimy przez 1000
-        result_str = f"{result} V"  # Przekształcamy w V
+        result = number / 1000  # Dzielimy przez 1000 (V)
 
         # Tworzymy nowe okno
         new_window = tk.Toplevel(root)
         new_window.title("Wynik pomiaru")
-        new_window.geometry("450x175")
+        new_window.geometry("450x300")
 
         # Label z numerem seryjnym
         label_result = tk.Label(new_window, text=f"Wynik dla numeru seryjnego {serial}:",
                                 font=("Helvetica", 14, "bold"))
         label_result.pack(pady=10)
 
-        # Label z wynikiem (liczba w V)
-        label_value = tk.Label(new_window, text=result_str, font=("Helvetica", 20, "bold"), fg="black")
-        label_value.pack(pady=20)
+        # Napięcie bez obciążenia
+        response_4 = send_command("AT+GAVR?")
+        if response_4:
+            match_4 = re.search(r"=\s*(\d+)", response_4)
+            if match_4:
+                voltage_no_load = int(match_4.group(1)) / 1000
+                label_voltage_no_load = tk.Label(new_window, text=f"Napięcie bez obciążenia = {voltage_no_load} V",
+                                                 font=("Helvetica", 12))
+                label_voltage_no_load.pack(pady=5)
 
-        # Zamknięcie okna po 4 sekundach
-        new_window.after(4000, new_window.destroy)
+        # Napięcie z obciążeniem
+        response_9 = send_command("AT+GAVL?")
+        if response_9:
+            match_9 = re.search(r"=\s*(\d+)", response_9)
+            if match_9:
+                voltage_with_load = int(match_9.group(1)) / 1000
+                label_voltage_with_load = tk.Label(new_window, text=f"Napięcie z obciążeniem = {voltage_with_load} V",
+                                                   font=("Helvetica", 12))
+                label_voltage_with_load.pack(pady=5)
+
+        # Prąd z obciążeniem
+        response_11 = send_command("AT+GACL?")
+        if response_11:
+            match_11 = re.search(r"=\s*(\d+)", response_11)
+            if match_11:
+                current_with_load = int(match_11.group(1)) / 1000
+                label_current_with_load = tk.Label(new_window, text=f"Prąd z obciążeniem = {current_with_load} A",
+                                                   font=("Helvetica", 12))
+                label_current_with_load.pack(pady=5)
+
+        # Moc z obciążeniem
+        response_13 = send_command("AT+GAPL?")
+        if response_13:
+            match_13 = re.search(r"=\s*(\d+)", response_13)
+            if match_13:
+                power_with_load = int(match_13.group(1)) / 1000
+                label_power_with_load = tk.Label(new_window, text=f"Moc z obciążeniem = {power_with_load} W",
+                                                 font=("Helvetica", 12))
+                label_power_with_load.pack(pady=5)
+
+        # Zamknięcie okna po 6 sekundach
+        # new_window.after(6000, new_window.destroy)
     else:
         messagebox.showerror("Błąd", "Nie udało się wyodrębnić wyniku z odpowiedzi AT+GAVR?")
+
 
 
 # Tworzenie głównego okna
@@ -208,27 +261,23 @@ entry_hrid.focus()
 button_hrid = tk.Button(root, text="Zatwierdź", font=("Helvetica", 12, "bold"), command=zatwierdz_hrid)
 button_hrid.pack(pady=10)
 
-# Label i pole tekstowe dla numeru seryjnego
-label_serial = tk.Label(root, text="Zeskanuj numer seryjny (12 znaków):", font=("Helvetica", 14, "bold"))
+# Label i pole tekstowe dla numeru seryjnego (wyłączone na początku)
+label_serial = tk.Label(root, text="Wprowadź numer seryjny:", font=("Helvetica", 14, "bold"))
 label_serial.pack(pady=10)
-label_serial.config(state="disabled")
 
-# Pole tekstowe dla numeru seryjnego
 entry_serial = tk.Entry(root, font=("Helvetica", 16), width=18, state="disabled")
 entry_serial.pack(pady=5)
 
-# Przyciski START
-button_start = tk.Button(root, text="START", font=("Helvetica", 12, "bold"), bg="blue", fg="white", state="disabled",
-                         command=handle_start)
-button_start.pack(pady=20)
+# Przycisk START (wyłączony na początku)
+button_start = tk.Button(root, text="START", font=("Helvetica", 12, "bold"), command=handle_start, state="disabled")
+button_start.pack(pady=10)
 
-# Label do wyświetlania komunikatów
-label_message = tk.Label(root, text="", font=("Helvetica", 12), width=50)  # Zwiększono szerokość
+# Label komunikatu
+label_message = tk.Label(root, text="", font=("Helvetica", 14, "bold"))
 label_message.pack(pady=10)
 
-# Przycisk wylogowania (w lewym dolnym rogu)
-button_wyloguj = tk.Button(root, text="Wyloguj", font=("Helvetica", 12, "bold"), command=wyloguj)
-button_wyloguj.place(x=10, y=360)
+# Przycisk wylogowania
+button_logout = tk.Button(root, text="Wyloguj", font=("Helvetica", 12, "bold"), command=wyloguj)
+button_logout.pack(pady=10)
 
-# Uruchomienie pętli głównej
 root.mainloop()
