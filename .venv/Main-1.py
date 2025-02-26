@@ -110,7 +110,7 @@ def wyloguj():
 
 # Tworzenie głównego okna
 root = tk.Tk()
-root.title("Serializacja SP171")
+root.title("Test obciążenia")
 root.geometry("500x400")
 
 # Label i pole tekstowe dla HRID
