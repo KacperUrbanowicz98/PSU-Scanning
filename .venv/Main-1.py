@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, simpledialog
 from PIL import Image, ImageTk
 import csv
 import os
@@ -13,14 +13,13 @@ VALID_HRID = {
     "44963", "12100667", "81705", "45216", "45061", "12100171",
     "12100741", "81560", "81563", "81564", "45233", "12101333",
     "12101111", "12100174", "12100475", "12101090", "12100587",
-    "12101094", "45016"
+    "12101094", "45016", "12101455"
 }
 
 # Ustawienia pliku
 MAX_ROWS = 1_048_576  # Maksymalna liczba wierszy w pliku CSV
 file_counter = 1  # Numer pliku (startujemy od 1)
 current_file = f"dane_{file_counter}.csv"  # Aktualny plik CSV
-
 
 # Funkcja do wysyłania komend przez port szeregowy i oczekiwanie na odpowiedź
 def send_command(command):
@@ -38,7 +37,6 @@ def send_command(command):
         show_message(f"Błąd: {e}", "red")
         return None
 
-
 def zatwierdz_hrid():
     hrid = entry_hrid.get()
     if hrid in VALID_HRID:  # Sprawdzamy, czy HRID jest na liście
@@ -53,6 +51,13 @@ def zatwierdz_hrid():
     else:
         messagebox.showwarning("Ostrzeżenie", "Wprowadziłeś nieprawidłowy HRID. Spróbuj raz jeszcze.")
 
+def engineering_mode():
+    password = simpledialog.askstring("Engineering Mode", "Wprowadź hasło:", show='*')
+    if password == "engSKY123$":
+        messagebox.showinfo("Tryb inżynieryjny", "Tryb inżynieryjny aktywowany.")
+        # Możesz dodać dodatkową logikę, aby odblokować inne elementy interfejsu
+    else:
+        messagebox.showerror("Błąd", "Nieprawidłowe hasło.")
 
 def zapis_do_csv(hrid, serial, date, response_4, response_9, p3s_response, p4s_response, p5s_response, final_result):
     global file_counter, current_file
@@ -104,7 +109,6 @@ def map_p3p4p5(value):
         return "PASS"
     else:
         return "FAIL"
-
 
 def handle_serial_input(event):
     serial_num = entry_serial.get()
@@ -163,18 +167,15 @@ def handle_serial_input(event):
     else:
         show_message("Numer seryjny musi mieć dokładnie 12 znaków!", "red")
 
-
 def show_message(message, color):
     # Wyświetlenie komunikatu w etykiecie z odpowiednim kolorem i stylem
     label_message.config(text=message, fg=color, font=("Helvetica", 12, "bold"))
     # Po 3 sekundach czyszczenie komunikatu
     root.after(3000, clear_message)
 
-
 def clear_message():
     label_message.config(text="")  # Usunięcie komunikatu
     entry_serial.focus()  # Ponowne ustawienie kursora w polu numeru seryjnego
-
 
 def wyloguj():
     # Zablokowanie pola HRID i numeru seryjnego po wylogowaniu
@@ -186,8 +187,6 @@ def wyloguj():
     entry_hrid.focus()  # Ustawienie kursora w polu HRID po wylogowaniu
     button_logout.config(state="disabled")  # Dezaktywacja przycisku po wylogowaniu
 
-
-# Funkcja do wyświetlania nowego okna z wynikiem
 # Funkcja do wyświetlania nowego okna z wynikiem
 def show_gavr_window(serial_num, gavr_response_4, gavr_response_9, p3s_response, p4s_response, p5s_response, duration):
     match_4 = re.search(r"=\s*(\d+)", gavr_response_4)
@@ -260,7 +259,6 @@ def show_gavr_window(serial_num, gavr_response_4, gavr_response_9, p3s_response,
     else:
         messagebox.showerror("Błąd", "Nie udało się wyodrębnić wyniku z odpowiedzi.")
 
-
 def unlock_serial_field():
     # Odblokowanie pola numeru seryjnego i czyszczenie go
     entry_serial.config(state="normal")
@@ -284,6 +282,10 @@ entry_hrid.focus()
 # Przycisk do zatwierdzenia HRID
 button_hrid = tk.Button(root, text="Zatwierdź HRID", command=zatwierdz_hrid, font=("Helvetica", 14, "bold"), bg="green")
 button_hrid.pack(pady=10)
+
+# Przycisk "Engineering Mode"
+button_engineering_mode = tk.Button(root, text="Engineering Mode", command=engineering_mode, font=("Helvetica", 12, "bold"), bg="blue", fg="white")
+button_engineering_mode.pack(pady=10)
 
 # Label i pole tekstowe dla numeru seryjnego
 label_serial = tk.Label(root, text="Wprowadź numer seryjny:", font=("Helvetica", 14, "bold"), state="disabled")
@@ -315,6 +317,5 @@ try:
 
 except Exception as e:
     print(f"Nie udało się wczytać obrazka: {e}")
-
 
 root.mainloop()
