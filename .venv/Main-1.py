@@ -213,22 +213,22 @@ def show_gavr_window(serial_num, gavr_response_4, gavr_response_9, p3s_response,
         label_result = tk.Label(new_window, text=f"Wynik dla numeru seryjnego {serial_num}:", font=("Helvetica", 14, "bold"))
         label_result.pack(pady=10)
 
-        label_voltage_no_load = tk.Label(new_window, text=f"Napięcie bez obciążenia = {voltage_no_load} V", font=("Helvetica", 12))
+        label_voltage_no_load = tk.Label(new_window, text=f"Napięcie bez obciążenia = {voltage_no_load} V", font=("Helvetica", 12, "bold"))
         label_voltage_no_load.pack(pady=5)
 
-        label_voltage_with_load = tk.Label(new_window, text=f"Napięcie z obciążeniem = {voltage_with_load} V", font=("Helvetica", 12))
+        label_voltage_with_load = tk.Label(new_window, text=f"Napięcie z obciążeniem = {voltage_with_load} V", font=("Helvetica", 12, "bold"))
         label_voltage_with_load.pack(pady=5)
 
         # Zmieniamy kolor tekstu w zależności od wyniku P3S
-        label_p3s = tk.Label(new_window, text=f"P3S = {p3s_value}", font=("Helvetica", 12), fg="green" if p3s_value == "PASS" else "red")
+        label_p3s = tk.Label(new_window, text=f"P3S = {p3s_value}", font=("Helvetica", 12, "bold"), fg="green" if p3s_value == "PASS" else "red")
         label_p3s.pack(pady=5)
 
         # Zmieniamy kolor tekstu w zależności od wyniku P4S
-        label_p4s = tk.Label(new_window, text=f"P4S = {p4s_value}", font=("Helvetica", 12), fg="green" if p4s_value == "PASS" else "red")
+        label_p4s = tk.Label(new_window, text=f"P4S = {p4s_value}", font=("Helvetica", 12, "bold"), fg="green" if p4s_value == "PASS" else "red")
         label_p4s.pack(pady=5)
 
         # Zmieniamy kolor tekstu w zależności od wyniku P5S
-        label_p5s = tk.Label(new_window, text=f"P5S = {p5s_value}", font=("Helvetica", 12), fg="green" if p5s_value == "PASS" else "red")
+        label_p5s = tk.Label(new_window, text=f"P5S = {p5s_value}", font=("Helvetica", 12, "bold"), fg="green" if p5s_value == "PASS" else "red")
         label_p5s.pack(pady=5)
 
         # Wyświetlanie czasu trwania pomiaru
