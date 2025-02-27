@@ -46,11 +46,10 @@ def zatwierdz_hrid():
         entry_serial.config(state="normal")
         entry_serial.focus()  # Ustawiamy kursor w polu numeru seryjnego
         label_serial.config(state="normal")
-        # Pokazujemy przycisk START
-        button_start.config(state="normal")
         # Zablokowanie pola HRID po zatwierdzeniu
         entry_hrid.config(state="disabled")
-        messagebox.showinfo("Informacja", f"HRID {hrid} zatwierdzony. Możesz teraz wprowadzić numer seryjny.")
+        messagebox.showinfo("Komunikat logowania", f"HRID {hrid} zatwierdzony. Możesz teraz wprowadzić numer seryjny.")
+        button_logout.config(state="normal")  # Aktywacja przycisku "Wyloguj" po zatwierdzeniu HRID
     else:
         messagebox.showwarning("Ostrzeżenie", "Wprowadziłeś nieprawidłowy HRID. Spróbuj raz jeszcze.")
 
@@ -107,7 +106,7 @@ def map_p3p4p5(value):
         return "FAIL"
 
 
-def handle_start():
+def handle_serial_input(event):
     serial_num = entry_serial.get()
     hrid = entry_hrid.get()
 
@@ -134,11 +133,7 @@ def handle_start():
         time.sleep(0.1)
         response_10 = send_command("AT+REL=0")
         time.sleep(0.1)
-        response_11 = send_command("AT+REL=1")
-        time.sleep(0.1)
         response_12 = send_command("AT+CHEP=1")
-        time.sleep(0.1)
-        response_13 = send_command("AT+REL=0")
         time.sleep(0.1)
         response_14 = send_command("AT+P3S?")
         time.sleep(0.1)
@@ -153,6 +148,7 @@ def handle_start():
         zapis_do_csv(hrid, serial_num, current_date, response_4, response_9, response_14, response_15, response_16)
         show_gavr_window(serial_num, response_4, response_9, response_14, response_15, response_16, duration)
 
+        # Wyczyść pole numeru seryjnego
         entry_serial.delete(0, tk.END)
         entry_serial.focus()
     else:
@@ -176,10 +172,10 @@ def wyloguj():
     entry_hrid.config(state="normal")
     entry_serial.config(state="disabled")
     label_serial.config(state="disabled")
-    button_start.config(state="disabled")
     entry_hrid.delete(0, tk.END)  # Usunięcie wprowadzonego HRID
     messagebox.showinfo("Wylogowanie", "Zostałeś wylogowany. Wprowadź nowy HRID, aby rozpocząć pracę.")
     entry_hrid.focus()  # Ustawienie kursora w polu HRID po wylogowaniu
+    button_logout.config(state="disabled")  # Dezaktywacja przycisku po wylogowaniu
 
 
 # Funkcja do wyświetlania nowego okna z wynikiem
@@ -203,10 +199,14 @@ def show_gavr_window(serial_num, gavr_response_4, gavr_response_9, p3s_response,
         p4s_value = p4s_map.get(int(match_p4s.group(1)), "Nieznany wynik")
         p5s_value = p5s_map.get(int(match_p5s.group(1)), "Nieznany wynik")
 
+        # Sprawdzanie warunków na "PASS"
+        is_pass = (p3s_value == "PASS" and p4s_value == "PASS" and p5s_value == "PASS" and
+                   11.65 <= voltage_no_load <= 12.85 and 11.65 <= voltage_with_load <= 12.85)
+
         # Tworzenie nowego okna
         new_window = tk.Toplevel(root)
         new_window.title("Wynik pomiaru")
-        new_window.geometry("450x430")  # Zwiększamy wysokość okna
+        new_window.geometry("450x480")  # Zwiększamy wysokość okna
 
         label_result = tk.Label(new_window, text=f"Wynik dla numeru seryjnego {serial_num}:", font=("Helvetica", 14, "bold"))
         label_result.pack(pady=10)
@@ -233,10 +233,15 @@ def show_gavr_window(serial_num, gavr_response_4, gavr_response_9, p3s_response,
         label_duration = tk.Label(new_window, text=f"Czas pomiaru: {duration:.2f} s", font=("Helvetica", 10))
         label_duration.pack(side=tk.LEFT, anchor=tk.SW, padx=10, pady=10)
 
+        # Dodajemy "WYNIK KONCOWY"
+        wynik_tekst = "PASS" if is_pass else "FAIL"
+        wynik_bg = "green" if is_pass else "red"
+        label_wynik = tk.Label(new_window, text=f"WYNIK KONCOWY: {wynik_tekst}", font=("Helvetica", 16, "bold"), bg=wynik_bg, fg="white", anchor=tk.CENTER)
+        label_wynik.pack(pady=20, fill=tk.X)
+
         new_window.after(6000, new_window.destroy)  # Zamykanie okna po 6 sekundach
     else:
         messagebox.showerror("Błąd", "Nie udało się wyodrębnić wyniku z odpowiedzi.")
-
 
 
 # Tworzenie głównego okna
@@ -253,27 +258,40 @@ entry_hrid = tk.Entry(root, font=("Helvetica", 16), width=18)
 entry_hrid.pack(pady=5)
 entry_hrid.focus()
 
-# Przycisk zatwierdzenia HRID
-button_hrid = tk.Button(root, text="Zatwierdź", font=("Helvetica", 12, "bold"), command=zatwierdz_hrid)
+# Przycisk do zatwierdzenia HRID
+button_hrid = tk.Button(root, text="Zatwierdź HRID", command=zatwierdz_hrid, font=("Helvetica", 14, "bold"), bg="green")
 button_hrid.pack(pady=10)
 
-# Label i pole tekstowe dla numeru seryjnego (wyłączone na początku)
-label_serial = tk.Label(root, text="Wprowadź numer seryjny:", font=("Helvetica", 14, "bold"))
+# Label i pole tekstowe dla numeru seryjnego
+label_serial = tk.Label(root, text="Wprowadź numer seryjny:", font=("Helvetica", 14, "bold"), state="disabled")
 label_serial.pack(pady=10)
 
 entry_serial = tk.Entry(root, font=("Helvetica", 16), width=18, state="disabled")
 entry_serial.pack(pady=5)
 
-# Przycisk START (wyłączony na początku)
-button_start = tk.Button(root, text="START", font=("Helvetica", 12, "bold"), command=handle_start, state="disabled")
-button_start.pack(pady=10)
+# Label do wyświetlania komunikatów
+label_message = tk.Label(root, text="", font=("Helvetica", 12), fg="red")
+label_message.pack(pady=5)
 
-# Label komunikatu
-label_message = tk.Label(root, text="", font=("Helvetica", 14, "bold"))
-label_message.pack(pady=10)
+# Nasłuchiwanie na zmiany w polu numeru seryjnego
+entry_serial.bind('<Return>', handle_serial_input)
 
-# Przycisk wylogowania
-button_logout = tk.Button(root, text="Wyloguj", font=("Helvetica", 12, "bold"), command=wyloguj)
-button_logout.pack(pady=10)
+# Przycisk "Wyloguj" w lewym dolnym rogu
+button_logout = tk.Button(root, text="Wyloguj", command=wyloguj, font=("Helvetica", 12, "bold"), bg="red", fg="black", state="disabled")
+button_logout.place(x=10, y=360)  # Ustawienie w lewym dolnym rogu
+
+# Wczytanie i wyświetlenie obrazka w prawym dolnym rogu
+try:
+    logo_image = Image.open("logo.png")
+    logo_image = logo_image.resize((115, 30))  # Zmiana rozmiaru obrazka
+    logo_photo = ImageTk.PhotoImage(logo_image)
+
+    logo_label = tk.Label(root, image=logo_photo)
+    logo_label.image = logo_photo  # Trzymamy referencję, żeby obrazek się wyświetlał
+    logo_label.place(relx=1.0, rely=1.0, anchor='se', x=-5, y=-5)  # Pozycjonowanie w prawym dolnym rogu z marginesem
+
+except Exception as e:
+    print(f"Nie udało się wczytać obrazka: {e}")
+
 
 root.mainloop()
