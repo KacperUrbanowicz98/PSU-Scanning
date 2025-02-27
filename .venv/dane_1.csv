@@ -1,3 +1,2 @@
-HRID,Numer seryjny,Data,Napiecie bez obciazenia [V],Napiecie z obciazeniem [V],PIN 3,PIN 4,PIN 5,Wynik Koncowy
-12101333,JBBD128S4X00,2025-02-27 10:28:01,+GAVR=12302.76,+GAVL=12103.31,+P3S=1,+P4S=2,+P5S=2,FAIL
-12101333,JBBD128S4X00,2025-02-27 10:31:56,12.30335,12.10365,FAIL,PASS,PASS
+HRID,Numer seryjny,Data,Napiecie bez obciazenia [V],Napiecie z obciazeniem [V],PIN 3,PIN 4,PIN 5,Wynik końcowy
+12101333,JBBD128S4X00,2025-02-27 14:52:43,12.30083,12.10486,FAIL,PASS,PASS,FAIL

@@ -54,7 +54,7 @@ def zatwierdz_hrid():
         messagebox.showwarning("Ostrzeżenie", "Wprowadziłeś nieprawidłowy HRID. Spróbuj raz jeszcze.")
 
 
-def zapis_do_csv(hrid, serial, date, response_4, response_9, p3s_response, p4s_response, p5s_response):
+def zapis_do_csv(hrid, serial, date, response_4, response_9, p3s_response, p4s_response, p5s_response, final_result):
     global file_counter, current_file
     original_file = "dane.csv"
 
@@ -86,8 +86,8 @@ def zapis_do_csv(hrid, serial, date, response_4, response_9, p3s_response, p4s_r
         with open(current_file, mode='a', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             if current_row_count == 0:
-                writer.writerow(["HRID", "Numer seryjny", "Data", "Napiecie bez obciazenia [V]", "Napiecie z obciazeniem [V]", "PIN 3", "PIN 4", "PIN 5"])
-            writer.writerow([hrid, serial, date, voltage_no_load, voltage_with_load, p3s_value, p4s_value, p5s_value])
+                writer.writerow(["HRID", "Numer seryjny", "Data", "Napiecie bez obciazenia [V]", "Napiecie z obciazeniem [V]", "PIN 3", "PIN 4", "PIN 5", "Wynik koncowy"])
+            writer.writerow([hrid, serial, date, voltage_no_load, voltage_with_load, p3s_value, p4s_value, p5s_value, final_result])
     except Exception as e:
         show_message("Nie udało się zapisać danych", "red")
 
@@ -141,12 +141,20 @@ def handle_serial_input(event):
         time.sleep(0.1)
         response_16 = send_command("AT+P5S?")
         time.sleep(0.1)
-        respone_17 = send_command("AT+RST=1")
+        response_17 = send_command("AT+RST=1")
 
         end_time = time.time()
         duration = end_time - start_time
 
-        zapis_do_csv(hrid, serial_num, current_date, response_4, response_9, response_14, response_15, response_16)
+        # Oblicz wynik końcowy
+        p3s_value = map_p3p4p5(extract_value(response_14))
+        p4s_value = map_p3p4p5(extract_value(response_15))
+        p5s_value = map_p3p4p5(extract_value(response_16))
+        is_pass = (p3s_value == "PASS" and p4s_value == "PASS" and p5s_value == "PASS" and
+                   11.65 <= extract_value(response_4) <= 12.85 and 11.65 <= extract_value(response_9) <= 12.85)
+        final_result = "PASS" if is_pass else "FAIL"
+
+        zapis_do_csv(hrid, serial_num, current_date, response_4, response_9, response_14, response_15, response_16, final_result)
         show_gavr_window(serial_num, response_4, response_9, response_14, response_15, response_16, duration)
 
         # Wyczyść pole numeru seryjnego
@@ -258,10 +266,6 @@ def unlock_serial_field():
     entry_serial.config(state="normal")
     entry_serial.delete(0, tk.END)  # Czyszczenie pola
     entry_serial.focus()  # Ustawienie kursora w polu numeru seryjnego
-
-
-
-
 
 # Tworzenie głównego okna
 root = tk.Tk()
