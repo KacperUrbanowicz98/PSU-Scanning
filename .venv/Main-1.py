@@ -141,6 +141,7 @@ def handle_serial_input(event):
         time.sleep(0.1)
         response_16 = send_command("AT+P5S?")
         time.sleep(0.1)
+        respone_17 = send_command("AT+RST=1")
 
         end_time = time.time()
         duration = end_time - start_time
@@ -178,6 +179,7 @@ def wyloguj():
     button_logout.config(state="disabled")  # Dezaktywacja przycisku po wylogowaniu
 
 
+# Funkcja do wyświetlania nowego okna z wynikiem
 # Funkcja do wyświetlania nowego okna z wynikiem
 def show_gavr_window(serial_num, gavr_response_4, gavr_response_9, p3s_response, p4s_response, p5s_response, duration):
     match_4 = re.search(r"=\s*(\d+)", gavr_response_4)
@@ -236,12 +238,29 @@ def show_gavr_window(serial_num, gavr_response_4, gavr_response_9, p3s_response,
         # Dodajemy "WYNIK KONCOWY"
         wynik_tekst = "PASS" if is_pass else "FAIL"
         wynik_bg = "green" if is_pass else "red"
-        label_wynik = tk.Label(new_window, text=f"WYNIK KONCOWY: {wynik_tekst}", font=("Helvetica", 16, "bold"), bg=wynik_bg, fg="white", anchor=tk.CENTER)
-        label_wynik.pack(pady=20, fill=tk.X)
+
+        # Tworzymy etykietę i ustawiamy ją przy użyciu `place()`, aby ją wycentrować
+        label_wynik = tk.Label(new_window, text=f"WYNIK KONCOWY: {wynik_tekst}", font=("Helvetica", 16, "bold"),
+                               bg=wynik_bg, fg="white")
+        label_wynik.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
         new_window.after(6000, new_window.destroy)  # Zamykanie okna po 6 sekundach
+
+        # Po zniknięciu okna wynikowego odblokowujemy pole numeru seryjnego i czyścimy je
+        new_window.after(6000, unlock_serial_field)
+
     else:
         messagebox.showerror("Błąd", "Nie udało się wyodrębnić wyniku z odpowiedzi.")
+
+
+def unlock_serial_field():
+    # Odblokowanie pola numeru seryjnego i czyszczenie go
+    entry_serial.config(state="normal")
+    entry_serial.delete(0, tk.END)  # Czyszczenie pola
+    entry_serial.focus()  # Ustawienie kursora w polu numeru seryjnego
+
+
+
 
 
 # Tworzenie głównego okna
