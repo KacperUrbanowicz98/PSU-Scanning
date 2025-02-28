@@ -23,6 +23,8 @@ current_file = f"dane_{file_counter}.csv"
 
 # Flaga do sprawdzania, czy użytkownik jest w trybie ENG
 is_eng_mode = False
+# Flaga do kontrolowania, czy testy powinny być kontynuowane
+continue_testing = False
 
 # Funkcja do wysyłania komend przez port szeregowy i oczekiwanie na odpowiedź
 def send_command(command):
@@ -51,7 +53,7 @@ def zatwierdz_hrid():
         messagebox.showwarning("Ostrzeżenie", "Wprowadziłeś nieprawidłowy HRID. Spróbuj raz jeszcze.")
 
 def login_eng():
-    global is_eng_mode  # Użyj globalnej zmiennej
+    global is_eng_mode, continue_testing  # Użyj globalnych zmiennych
     password = simpledialog.askstring("Logowanie ENG", "Wprowadź hasło:", show='*')
     if password == "engSKY123$":
         entry_hrid.delete(0, tk.END)
@@ -62,6 +64,8 @@ def login_eng():
         messagebox.showinfo("Logowanie ENG", "Zalogowano jako ENG. Możesz teraz wprowadzić numer seryjny.")
         button_logout.config(state="normal")
         is_eng_mode = True  # Ustaw flagę na True
+        continue_testing = True  # Ustaw flagę kontynuacji testów
+        start_testing()  # Rozpocznij testowanie po zalogowaniu
     else:
         messagebox.showwarning("Błąd logowania", "Nieprawidłowe hasło. Spróbuj ponownie.")
 
@@ -88,55 +92,59 @@ def map_p3p4p5(value):
         return "FAIL"
 
 def run_test(serial_num):
+    global continue_testing  # Użyj globalnej zmiennej
     current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     start_time = time.time()
 
-    response_1 = send_command("AT+REL=0")
-    time.sleep(0.1)
-    response_2 = send_command("AT+MEAS=1")
-    time.sleep(6)
-    response_3 = send_command("AT+REL=0")
-    time.sleep(0.1)
-    response_4 = send_command("AT+GAVR?")
-    time.sleep(0.1)
-    response_6 = send_command("AT+REL=1")
-    time.sleep(0.1)
-    response_7 = send_command("AT+MEAS=1")
-    time.sleep(6)
-    response_8 = send_command("AT+REL=0")
-    time.sleep(0.1)
-    response_9 = send_command("AT+GAVL?")
-    time.sleep(0.1)
-    response_10 = send_command("AT+REL=0")
-    time.sleep(0.1)
-    response_12 = send_command("AT+CHEP=1")
-    time.sleep(0.1)
-    response_14 = send_command("AT+P3S?")
-    time.sleep(0.1)
-    response_15 = send_command("AT+P4S?")
-    time.sleep(0.1)
-    response_16 = send_command("AT+P5S?")
-    time.sleep(0.1)
-    response_17 = send_command("AT+RST=1")
+    while continue_testing:  # Sprawdź flagę w pętli
+        response_1 = send_command("AT+REL=0")
+        time.sleep(0.1)
+        response_2 = send_command("AT+MEAS=1")
+        time.sleep(6)
+        response_3 = send_command("AT+REL=0")
+        time.sleep(0.1)
+        response_4 = send_command("AT+GAVR?")
+        time.sleep(0.1)
+        response_6 = send_command("AT+REL=1")
+        time.sleep(0.1)
+        response_7 = send_command("AT+MEAS=1")
+        time.sleep(6)
+        response_8 = send_command("AT+REL=0")
+        time.sleep(0.1)
+        response_9 = send_command("AT+GAVL?")
+        time.sleep(0.1)
+        response_10 = send_command("AT+REL=0")
+        time.sleep(0.1)
+        response_12 = send_command("AT+CHEP=1")
+        time.sleep(0.1)
+        response_14 = send_command("AT+P3S?")
+        time.sleep(0.1)
+        response_15 = send_command("AT+P4S?")
+        time.sleep(0.1)
+        response_16 = send_command("AT+P5S?")
+        time.sleep(0.1)
+        response_17 = send_command("AT+RST=1")
 
-    end_time = time.time()
-    duration = end_time - start_time
+        end_time = time.time()
+        duration = end_time - start_time
 
-    p3s_value = map_p3p4p5(extract_value(response_14))
-    p4s_value = map_p3p4p5(extract_value(response_15))
-    p5s_value = map_p3p4p5(extract_value(response_16))
-    is_pass = (p3s_value == "PASS" and p4s_value == "PASS" and p5s_value == "PASS" and
-               11.65 <= extract_value(response_4) <= 12.85 and 11.65 <= extract_value(response_9) <= 12.85)
-    final_result = "PASS" if is_pass else "FAIL"
+        p3s_value = map_p3p4p5(extract_value(response_14))
+        p4s_value = map_p3p4p5(extract_value(response_15))
+        p5s_value = map_p3p4p5(extract_value(response_16))
+        is_pass = (p3s_value == "PASS" and p4s_value == "PASS" and p5s_value == "PASS" and
+                   11.65 <= extract_value(response_4) <= 12.85 and 11.65 <= extract_value(response_9) <= 12.85)
+        final_result = "PASS" if is_pass else "FAIL"
 
-    zapis_do_csv(entry_hrid.get(), serial_num, current_date, response_4, response_9, response_14, response_15, response_16, final_result)
-    show_gavr_window(serial_num, response_4, response_9, response_14, response_15, response_16, duration)
+        zapis_do_csv(entry_hrid.get(), serial_num, current_date, response_4, response_9, response_14, response_15, response_16, final_result)
+        show_gavr_window(serial_num, response_4, response_9, response_14, response_15, response_16, duration)
 
-    entry_serial.delete(0, tk.END)
-    entry_serial.focus()
+        entry_serial.delete(0, tk.END)
+        entry_serial.focus()
 
-    # Uruchom kolejny test po 8 sekundach
-    root.after(8000, lambda: run_test(serial_num))
+        # Uruchom kolejny test po 8 sekundach, jeśli kontynuujemy testy
+        if continue_testing:
+            root.after(12000, lambda: run_test(serial_num))
+            break  # Przerwij pętlę, aby uniknąć wielokrotnego wywołania
 
 def run_test_once(serial_num):
     current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -231,8 +239,9 @@ def clear_message():
     entry_serial.focus()
 
 def wyloguj():
-    global is_eng_mode  # Użyj globalnej zmiennej
+    global is_eng_mode, continue_testing  # Użyj globalnych zmiennych
     is_eng_mode = False  # Zresetuj flagę
+    continue_testing = False  # Zatrzymaj kontynuację testów
     entry_hrid.config(state="normal")
     entry_serial.config(state="disabled")
     label_serial.config(state="disabled")
@@ -346,6 +355,10 @@ button_logout.place(x=10, y=360)
 button_eng = tk.Button(root, text="ENG", command=login_eng, font=("Helvetica", 12, "bold"), bg="blue", fg="white")
 button_eng.place(x=80, y=360)
 
+# Przycisk "STOP ENG" obok przycisku "ENG"
+button_stop_eng = tk.Button(root, text="STOP ENG", command=lambda: stop_testing(), font=("Helvetica", 12, "bold"), bg="orange", fg="black", state="disabled")
+button_stop_eng.place(x=160, y=360)
+
 # Wczytanie i wyświetlenie obrazka w prawym dolnym rogu
 try:
     logo_image = Image.open("logo.png")
@@ -359,4 +372,5 @@ try:
 except Exception as e:
     print(f"Nie udało się wczytać obrazka: {e}")
 
+# Uruchomienie głównej pętli aplikacji
 root.mainloop()
