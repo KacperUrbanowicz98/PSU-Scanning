@@ -13,7 +13,7 @@ VALID_HRID = {
     "44963", "12100667", "81705", "45216", "45061", "12100171",
     "12100741", "81560", "81563", "81564", "45233", "12101333",
     "12101111", "12100174", "12100475", "12101090", "12100587",
-    "12101094", "45016"
+    "12101094", "45016", "FF", "NFF"
 }
 
 # Ustawienia pliku
@@ -131,11 +131,16 @@ def run_test(serial_num):
         p3s_value = map_p3p4p5(extract_value(response_14))
         p4s_value = map_p3p4p5(extract_value(response_15))
         p5s_value = map_p3p4p5(extract_value(response_16))
+
+        voltage_no_load = extract_value(response_4) / 1000
+        voltage_with_load = extract_value(response_9) / 1000
+
         is_pass = (p3s_value == "PASS" and p4s_value == "PASS" and p5s_value == "PASS" and
-                   11.65 <= extract_value(response_4) <= 12.85 and 11.65 <= extract_value(response_9) <= 12.85)
+                   11.65 <= voltage_no_load <= 12.85 and 11.65 <= voltage_with_load <= 12.85)
         final_result = "PASS" if is_pass else "FAIL"
 
-        zapis_do_csv(entry_hrid.get(), serial_num, current_date, response_4, response_9, response_14, response_15, response_16, final_result)
+        zapis_do_csv(entry_hrid.get(), serial_num, current_date, voltage_no_load, voltage_with_load, response_14,
+                     response_15, response_16, final_result)
         show_gavr_window(serial_num, response_4, response_9, response_14, response_15, response_16, duration)
 
         entry_serial.delete(0, tk.END)
@@ -184,15 +189,20 @@ def run_test_once(serial_num):
     p3s_value = map_p3p4p5(extract_value(response_14))
     p4s_value = map_p3p4p5(extract_value(response_15))
     p5s_value = map_p3p4p5(extract_value(response_16))
+
+    voltage_no_load = extract_value(response_4) / 1000
+    voltage_with_load = extract_value(response_9) / 1000
+
     is_pass = (p3s_value == "PASS" and p4s_value == "PASS" and p5s_value == "PASS" and
-               11.65 <= extract_value(response_4) <= 12.85 and 11.65 <= extract_value(response_9) <= 12.85)
+               11.65 <= voltage_no_load <= 12.85 and 11.65 <= voltage_with_load <= 12.85)
     final_result = "PASS" if is_pass else "FAIL"
 
-    zapis_do_csv(entry_hrid.get(), serial_num, current_date, response_4, response_9, response_14, response_15, response_16, final_result)
+    zapis_do_csv(entry_hrid.get(), serial_num, current_date, voltage_no_load, voltage_with_load, response_14, response_15, response_16, final_result)
     show_gavr_window(serial_num, response_4, response_9, response_14, response_15, response_16, duration)
 
     entry_serial.delete(0, tk.END)
     entry_serial.focus()
+
 
 def zapis_do_csv(hrid, serial, date, response_4, response_9, p3s_response, p4s_response, p5s_response, final_result):
     global file_counter, current_file
@@ -216,8 +226,8 @@ def zapis_do_csv(hrid, serial, date, response_4, response_9, p3s_response, p4s_r
         current_row_count = 0
 
     try:
-        voltage_no_load = extract_value(response_4) / 1000
-        voltage_with_load = extract_value(response_9) / 1000
+        voltage_no_load = response_4
+        voltage_with_load = response_9
         p3s_value = map_p3p4p5(extract_value(p3s_response))
         p4s_value = map_p3p4p5(extract_value(p4s_response))
         p5s_value = map_p3p4p5(extract_value(p5s_response))
