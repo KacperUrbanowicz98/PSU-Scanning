@@ -13,7 +13,7 @@ VALID_HRID = {
     "44963", "12100667", "81705", "45216", "45061", "12100171",
     "12100741", "81560", "81563", "81564", "45233", "12101333",
     "12101111", "12100174", "12100475", "12101090", "12100587",
-    "12101094", "45016", "FF", "NFF"
+    "12101094", "45016", "FF", "NFF", "TEST"
 }
 
 # Ustawienia pliku
@@ -29,7 +29,7 @@ continue_testing = False
 # Funkcja do wysyłania komend przez port szeregowy i oczekiwanie na odpowiedź
 def send_command(command):
     try:
-        with serial.Serial('COM7', 115200, timeout=3) as ser:
+        with serial.Serial('COM1', 115200, timeout=3) as ser:
             time.sleep(1)
             ser.write(f'{command}\r\n'.encode())
             print(f"Komenda wysłana: {command}")
@@ -363,7 +363,7 @@ button_logout.place(x=10, y=360)
 
 # Przycisk "ENG" obok przycisku "Wyloguj"
 button_eng = tk.Button(root, text="ENG", command=login_eng, font=("Helvetica", 12, "bold"), bg="blue", fg="white")
-button_eng.place(x=80, y=360)
+button_eng.place(x=98, y=360)
 
 # Przycisk "STOP ENG" obok przycisku "ENG"
 button_stop_eng = tk.Button(root, text="STOP ENG", command=lambda: stop_testing(), font=("Helvetica", 12, "bold"), bg="orange", fg="black", state="disabled")
