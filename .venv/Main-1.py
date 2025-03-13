@@ -206,41 +206,43 @@ def run_test_once(serial_num):
     entry_serial.focus()
 
 
-def zapis_do_csv(hrid, serial, date, response_4, response_9, p3s_response, p4s_response, p5s_response, final_result):
+def zapis_do_csv(hrid, serial, date, voltage_no_load, voltage_with_load, p3s_response, p4s_response, p5s_response, final_result):
     global file_counter, current_file
     original_file = "dane.csv"
 
-    if os.path.exists(original_file):
-        with open(original_file, 'r', encoding='utf-8') as file:
-            original_row_count = sum(1 for _ in file)
-        if original_row_count < MAX_ROWS:
-            current_file = original_file
-    else:
-        original_row_count = 0
-
+    # Sprawdź, czy bieżący plik istnieje i czy nie przekroczył limitu wierszy
     if os.path.exists(current_file):
-        with open(current_file, 'r', encoding='utf-8') as file:
+        with open(current_file, 'r', encoding='utf-8', errors='replace') as file:
             current_row_count = sum(1 for _ in file)
-        if current_row_count >= MAX_ROWS:
-            file_counter += 1
-            current_file = f"dane_{file_counter}.csv"
     else:
         current_row_count = 0
 
-    try:
-        voltage_no_load = response_4
-        voltage_with_load = response_9
-        p3s_value = map_p3p4p5(extract_value(p3s_response))
-        p4s_value = map_p3p4p5(extract_value(p4s_response))
-        p5s_value = map_p3p4p5(extract_value(p5s_response))
+    # Jeśli plik osiągnął maksymalny rozmiar, utwórz nowy plik
+    if current_row_count >= MAX_ROWS:
+        file_counter += 1
+        current_file = f"dane_{file_counter}.csv"
+        current_row_count = 0  # Nowy plik, więc zaczynamy od 0
 
-        with open(current_file, 'r', encoding='utf-8', errors='replace') as file:
-            current_row_count = sum(1 for _ in file)
-            if current_row_count == 0:
-                writer.writerow(["Tester, ""HRID", "Numer seryjny", "Data", "Napiecie bez obciazenia [V]", "Napiecie z obciazeniem [V]", "PIN 3", "PIN 4", "PIN 5", "Wynik koncowy"])
-            writer.writerow([TESTER_NAME,hrid, serial, date, voltage_no_load, voltage_with_load, p3s_value, p4s_value, p5s_value, final_result])
+    # Sprawdź, czy plik wymaga nagłówka (jeśli jest nowy)
+    write_header = not os.path.exists(current_file) or current_row_count == 0
+
+    try:
+        with open(current_file, 'a', newline='', encoding='utf-8', errors='replace') as file:
+            writer = csv.writer(file)
+            if write_header:
+                writer.writerow(["Tester", "HRID", "Numer seryjny", "Data", "Napiecie bez obciazenia [V]",
+                                 "Napiecie z obciazeniem [V]", "PIN 3", "PIN 4", "PIN 5", "Wynik koncowy"])
+
+            writer.writerow([TESTER_NAME, hrid, serial, date, voltage_no_load, voltage_with_load,
+                             map_p3p4p5(extract_value(p3s_response)),
+                             map_p3p4p5(extract_value(p4s_response)),
+                             map_p3p4p5(extract_value(p5s_response)),
+                             final_result])
+            print(f"Dane zapisane do pliku: {current_file}")
+
     except Exception as e:
-        show_message("Nie udało się zapisać danych", "red")
+        show_message(f"Nie udało się zapisać danych: {e}", "red")
+
 
 def show_message(message, color):
     label_message.config(text=message, fg=color, font=("Helvetica", 12, "bold"))
