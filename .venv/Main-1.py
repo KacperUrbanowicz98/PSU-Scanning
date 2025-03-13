@@ -8,6 +8,8 @@ import serial
 import time
 import re
 
+TESTER_NAME = "RXT-PSU-001"
+
 # Lista akceptowanych HRID (z tabeli)
 VALID_HRID = {
     "44963", "12100667", "81705", "45216", "45061", "12100171",
@@ -29,7 +31,7 @@ continue_testing = False
 # Funkcja do wysyłania komend przez port szeregowy i oczekiwanie na odpowiedź
 def send_command(command):
     try:
-        with serial.Serial('COM1', 115200, timeout=3) as ser:
+        with serial.Serial('COM8', 115200, timeout=3) as ser:
             time.sleep(1)
             ser.write(f'{command}\r\n'.encode())
             print(f"Komenda wysłana: {command}")
@@ -232,11 +234,11 @@ def zapis_do_csv(hrid, serial, date, response_4, response_9, p3s_response, p4s_r
         p4s_value = map_p3p4p5(extract_value(p4s_response))
         p5s_value = map_p3p4p5(extract_value(p5s_response))
 
-        with open(current_file, mode='a', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
+        with open(current_file, 'r', encoding='utf-8', errors='replace') as file:
+            current_row_count = sum(1 for _ in file)
             if current_row_count == 0:
-                writer.writerow(["HRID", "Numer seryjny", "Data", "Napiecie bez obciazenia [V]", "Napiecie z obciazeniem [V]", "PIN 3", "PIN 4", "PIN 5", "Wynik koncowy"])
-            writer.writerow([hrid, serial, date, voltage_no_load, voltage_with_load, p3s_value, p4s_value, p5s_value, final_result])
+                writer.writerow(["Tester, ""HRID", "Numer seryjny", "Data", "Napiecie bez obciazenia [V]", "Napiecie z obciazeniem [V]", "PIN 3", "PIN 4", "PIN 5", "Wynik koncowy"])
+            writer.writerow([TESTER_NAME,hrid, serial, date, voltage_no_load, voltage_with_load, p3s_value, p4s_value, p5s_value, final_result])
     except Exception as e:
         show_message("Nie udało się zapisać danych", "red")
 
@@ -327,7 +329,7 @@ def unlock_serial_field():
 
 # Tworzenie głównego okna
 root = tk.Tk()
-root.title("Test obciążenia")
+root.title("RXT-PSU-001")
 root.geometry("500x400")
 
 # Label i pole tekstowe dla HRID
