@@ -6,8 +6,21 @@
   <component name="ChangeListManager">
     <list default="true" id="a01d36f0-5671-403f-85db-8513e377c67f" name="Changes" comment="Zmiana czcionki tekstow w oknie glownym, dodanie blokady okna po wpisaniu HRID">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/CMO1.spec" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/CMO2.spec" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/CMO3.spec" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/CMO4.spec" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/CMO5.spec" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/CMO6.spec" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/CMO7.spec" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.venv/Main-1.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Main-1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/dane_1.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/dist/CMO1.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/dist/CMO2.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/dist/CMO3.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/dist/CMO4.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/dist/CMO5.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/dist/CMO6.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/dist/CMO7.exe" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -7,8 +7,11 @@ from datetime import datetime
 import serial
 import time
 import re
+import threading
+
 
 TESTER_NAME = "RXT-PSU-001"
+
 
 # Lista akceptowanych HRID (z tabeli)
 VALID_HRID = {
@@ -71,15 +74,31 @@ def login_eng():
     else:
         messagebox.showwarning("Błąd logowania", "Nieprawidłowe hasło. Spróbuj ponownie.")
 
+# Funkcja wyświetlająca okno z napisem "TEST W TRAKCIE"
+def show_test_in_progress_window():
+    progress_window = tk.Toplevel(root)
+    progress_window.title("Test w toku")
+    progress_window.geometry("300x100")
+    progress_window.configure(bg="black")
+
+    label_progress = tk.Label(progress_window, text="TEST W TRAKCIE", font=("Helvetica", 24, "bold"), fg="yellow", bg="black")
+    label_progress.pack(expand=True)
+
+    return progress_window
+
+
 def start_testing():
     serial_num = entry_serial.get()
     if len(serial_num) == 12:
         if is_eng_mode:  # Sprawdź, czy jesteśmy w trybie ENG
-            run_test(serial_num)  # Uruchom test w pętli
+            thread = threading.Thread(target=run_test, args=(serial_num,))
+            thread.start()
         else:
-            run_test_once(serial_num)  # Uruchom test jednorazowo
+            thread = threading.Thread(target=run_test_once, args=(serial_num,))
+            thread.start()
     else:
         show_message("Numer seryjny musi mieć dokładnie 12 znaków!", "red")
+
 
 def extract_value(response):
     match = re.search(r"=\s*(-?\d+\.?\d*)", response)
@@ -153,7 +172,10 @@ def run_test(serial_num):
             root.after(12000, lambda: run_test(serial_num))
             break  # Przerwij pętlę, aby uniknąć wielokrotnego wywołania
 
+
+
 def run_test_once(serial_num):
+    progress_window = show_test_in_progress_window()
     current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     start_time = time.time()
 
@@ -203,6 +225,7 @@ def run_test_once(serial_num):
     show_gavr_window(serial_num, response_4, response_9, response_14, response_15, response_16, duration)
 
     entry_serial.delete(0, tk.END)
+    progress_window.destroy()
     entry_serial.focus()
 
 
