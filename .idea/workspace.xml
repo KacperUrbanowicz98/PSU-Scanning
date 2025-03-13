@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a01d36f0-5671-403f-85db-8513e377c67f" name="Changes" comment="Full Projekt">
+    <list default="true" id="a01d36f0-5671-403f-85db-8513e377c67f" name="Changes" comment="Zmiana czcionki tekstow w oknie glownym, dodanie blokady okna po wpisaniu HRID">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.venv/Main-1.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Main-1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/dane_1.csv" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/dane_1.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +36,9 @@
     &quot;accountId&quot;: &quot;96cc6235-205f-4fd6-823a-0dcbb08bc62a&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/.venv/Main-1.py" root0="SKIP_INSPECTION" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -47,11 +51,14 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Python.Main-1.executor": "Run",
+    "Python.check com7.executor": "Run",
+    "Python.test_limitu_excel.executor": "Run",
+    "Python.usuwanie_zlych_excel.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
     "last_opened_file_path": "C:/Users/Kacper.Urbanowicz/PycharmProjects/PSU-Scanning",
-    "settings.editor.selected.configurable": "ml.llm.LLMConfigurable"
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
   <component name="SharedIndexes">
@@ -82,5 +89,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Zmiana czcionki tekstow w oknie glownym, dodanie blokady okna po wpisaniu HRID" />
+    <option name="LAST_COMMIT_MESSAGE" value="Zmiana czcionki tekstow w oknie glownym, dodanie blokady okna po wpisaniu HRID" />
   </component>
 </project>
