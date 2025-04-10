@@ -1,0 +1,38 @@
+[
+    {
+        "Tester": "RXT-PSU-001",
+        "HRID": "12101333",
+        "Numer seryjny": "JBBD12461ZXH",
+        "Data": "2025-04-09 15:32:09",
+        "Napiecie bez obciazenia [V]": 12.23259,
+        "Napiecie z obciazeniem [V]": 12.0022,
+        "PIN 3": "PASS",
+        "PIN 4": "PASS",
+        "PIN 5": "PASS",
+        "Wynik koncowy": "PASS"
+    },
+    {
+        "Tester": "RXT-PSU-001",
+        "HRID": "12101333",
+        "Numer seryjny": "JBBD12461ZXH",
+        "Data": "2025-04-09 15:34:03",
+        "Napiecie bez obciazenia [V]": 12.23298,
+        "Napiecie z obciazeniem [V]": 11.99784,
+        "PIN 3": "PASS",
+        "PIN 4": "PASS",
+        "PIN 5": "PASS",
+        "Wynik koncowy": "PASS"
+    },
+    {
+        "tester": "RXT-PSU-001",
+        "hrid": "12101333",
+        "serial_no": "JBBD12461ZXH",
+        "date": "2025-04-09 15:48:54",
+        "voltage_no_load_v": 12.23349,
+        "voltage_with_load_v": 11.99808,
+        "pin_3": "PASS",
+        "pin_4": "PASS",
+        "pin_5": "PASS",
+        "final_result": "PASS"
+    }
+]

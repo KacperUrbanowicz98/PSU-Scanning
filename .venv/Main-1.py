@@ -8,23 +8,26 @@ import serial
 import time
 import re
 import threading
-
+import json
 
 TESTER_NAME = "RXT-PSU-001"
-
 
 # Lista akceptowanych HRID (z tabeli)
 VALID_HRID = {
     "44963", "12100667", "81705", "45216", "45061", "12100171",
     "12100741", "81560", "81563", "81564", "45233", "12101333",
     "12101111", "12100174", "12100475", "12101090", "12100587",
-    "12101094", "45016", "FF", "NFF", "TEST"
+    "12101094", "45016", "FF", "NFF", "TEST", "12101487", "45466",
+    "12100269", "45660", "45518", "45716", "12101132", "44987",
+    "12101261", "12100323", "45540", "12101179", "12101220",
+    "12101248", "12101182", "121011170", "45644", "45651",
+    "45011"
 }
 
 # Ustawienia pliku
 MAX_ROWS = 1_048_576
 file_counter = 1
-current_file = f"dane_{file_counter}.csv"
+current_file = f"dane_{file_counter}.json"
 
 # Flaga do sprawdzania, czy użytkownik jest w trybie ENG
 is_eng_mode = False
@@ -86,7 +89,6 @@ def show_test_in_progress_window():
 
     return progress_window
 
-
 def start_testing():
     serial_num = entry_serial.get()
     if len(serial_num) == 12:
@@ -98,7 +100,6 @@ def start_testing():
             thread.start()
     else:
         show_message("Numer seryjny musi mieć dokładnie 12 znaków!", "red")
-
 
 def extract_value(response):
     match = re.search(r"=\s*(-?\d+\.?\d*)", response)
@@ -160,7 +161,7 @@ def run_test(serial_num):
                    11.65 <= voltage_no_load <= 12.85 and 11.65 <= voltage_with_load <= 12.85)
         final_result = "PASS" if is_pass else "FAIL"
 
-        zapis_do_csv(entry_hrid.get(), serial_num, current_date, voltage_no_load, voltage_with_load, response_14,
+        zapis_do_json(entry_hrid.get(), serial_num, current_date, voltage_no_load, voltage_with_load, response_14,
                      response_15, response_16, final_result)
         show_gavr_window(serial_num, response_4, response_9, response_14, response_15, response_16, duration)
 
@@ -171,8 +172,6 @@ def run_test(serial_num):
         if continue_testing:
             root.after(12000, lambda: run_test(serial_num))
             break  # Przerwij pętlę, aby uniknąć wielokrotnego wywołania
-
-
 
 def run_test_once(serial_num):
     progress_window = show_test_in_progress_window()
@@ -221,51 +220,59 @@ def run_test_once(serial_num):
                11.65 <= voltage_no_load <= 12.85 and 11.65 <= voltage_with_load <= 12.85)
     final_result = "PASS" if is_pass else "FAIL"
 
-    zapis_do_csv(entry_hrid.get(), serial_num, current_date, voltage_no_load, voltage_with_load, response_14, response_15, response_16, final_result)
+    zapis_do_json(entry_hrid.get(), serial_num, current_date, voltage_no_load, voltage_with_load, response_14, response_15, response_16, final_result)
     show_gavr_window(serial_num, response_4, response_9, response_14, response_15, response_16, duration)
 
     entry_serial.delete(0, tk.END)
     progress_window.destroy()
     entry_serial.focus()
 
-
-def zapis_do_csv(hrid, serial, date, voltage_no_load, voltage_with_load, p3s_response, p4s_response, p5s_response, final_result):
+def zapis_do_json(hrid, serial, date, voltage_no_load, voltage_with_load, p3s_response, p4s_response, p5s_response, final_result):
     global file_counter, current_file
-    original_file = "dane.csv"
+    original_file = "dane.json"
 
     # Sprawdź, czy bieżący plik istnieje i czy nie przekroczył limitu wierszy
     if os.path.exists(current_file):
         with open(current_file, 'r', encoding='utf-8', errors='replace') as file:
-            current_row_count = sum(1 for _ in file)
+            try:
+                data = json.load(file)
+                current_row_count = len(data)
+            except json.JSONDecodeError:
+                data = []
+                current_row_count = 0
     else:
+        data = []
         current_row_count = 0
 
     # Jeśli plik osiągnął maksymalny rozmiar, utwórz nowy plik
     if current_row_count >= MAX_ROWS:
         file_counter += 1
-        current_file = f"dane_{file_counter}.csv"
+        current_file = f"dane_{file_counter}.json"
         current_row_count = 0  # Nowy plik, więc zaczynamy od 0
 
-    # Sprawdź, czy plik wymaga nagłówka (jeśli jest nowy)
-    write_header = not os.path.exists(current_file) or current_row_count == 0
+    # Dodaj nowy wpis do danych
+    entry = {
+        "tester": TESTER_NAME,
+        "hrid": hrid,
+        "serial_no": serial,
+        "date": date,
+        "voltage_no_load_v": voltage_no_load,
+        "voltage_with_load_v": voltage_with_load,
+        "pin_3": map_p3p4p5(extract_value(p3s_response)),
+        "pin_4": map_p3p4p5(extract_value(p4s_response)),
+        "pin_5": map_p3p4p5(extract_value(p5s_response)),
+        "final_result": final_result
+    }
+    data.append(entry)
 
+    # Zapisz dane do pliku JSON
     try:
-        with open(current_file, 'a', newline='', encoding='utf-8', errors='replace') as file:
-            writer = csv.writer(file)
-            if write_header:
-                writer.writerow(["Tester", "HRID", "Numer seryjny", "Data", "Napiecie bez obciazenia [V]",
-                                 "Napiecie z obciazeniem [V]", "PIN 3", "PIN 4", "PIN 5", "Wynik koncowy"])
-
-            writer.writerow([TESTER_NAME, hrid, serial, date, voltage_no_load, voltage_with_load,
-                             map_p3p4p5(extract_value(p3s_response)),
-                             map_p3p4p5(extract_value(p4s_response)),
-                             map_p3p4p5(extract_value(p5s_response)),
-                             final_result])
+        with open(current_file, 'w', encoding='utf-8', errors='replace') as file:
+            json.dump(data, file, ensure_ascii=False, indent=4)
             print(f"Dane zapisane do pliku: {current_file}")
 
     except Exception as e:
         show_message(f"Nie udało się zapisać danych: {e}", "red")
-
 
 def show_message(message, color):
     label_message.config(text=message, fg=color, font=("Helvetica", 12, "bold"))

@@ -5,22 +5,130 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a01d36f0-5671-403f-85db-8513e377c67f" name="Changes" comment="Zmiana czcionki tekstow w oknie glownym, dodanie blokady okna po wpisaniu HRID">
+      <change afterPath="$PROJECT_DIR$/.venv/CMO5.spec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/CMO6.spec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/CMO7.spec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/CMO8.spec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/CMO9.spec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/PatchNotes" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/RXT-PSU-001 v1.01.spec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/RXT-PSU-001 v1.02.spec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/RXT-PSU-001 v1.03.spec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/RXT-PSU-001 v1.04.spec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/CMO8/Analysis-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/CMO8/CMO8.pkg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/CMO8/EXE-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/CMO8/PKG-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/CMO8/PYZ-00.pyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/CMO8/PYZ-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/CMO8/base_library.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/CMO8/warn-CMO8.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/CMO8/xref-CMO8.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/CMO9/Analysis-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/CMO9/CMO9.pkg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/CMO9/EXE-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/CMO9/PKG-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/CMO9/PYZ-00.pyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/CMO9/PYZ-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/CMO9/base_library.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/CMO9/warn-CMO9.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/CMO9/xref-CMO9.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.01/Analysis-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.01/EXE-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.01/PKG-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.01/PYZ-00.pyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.01/PYZ-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.01/RXT-PSU-001 v1.01.pkg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.01/base_library.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.01/warn-RXT-PSU-001 v1.01.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.01/xref-RXT-PSU-001 v1.01.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.02/Analysis-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.02/EXE-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.02/PKG-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.02/PYZ-00.pyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.02/PYZ-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.02/RXT-PSU-001 v1.02.pkg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.02/base_library.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.02/warn-RXT-PSU-001 v1.02.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.02/xref-RXT-PSU-001 v1.02.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.03/Analysis-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.03/EXE-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.03/PKG-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.03/PYZ-00.pyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.03/PYZ-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.03/RXT-PSU-001 v1.03.pkg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.03/base_library.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.03/warn-RXT-PSU-001 v1.03.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.03/xref-RXT-PSU-001 v1.03.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.04/Analysis-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.04/EXE-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.04/PKG-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.04/PYZ-00.pyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.04/PYZ-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.04/RXT-PSU-001 v1.04.pkg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.04/base_library.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.04/warn-RXT-PSU-001 v1.04.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/build/RXT-PSU-001 v1.04/xref-RXT-PSU-001 v1.04.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/dane_1.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/dist/RXT-PSU-001 v1.01.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/dist/RXT-PSU-001 v1.02.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/dist/RXT-PSU-001 v1.03.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.venv/dist/RXT-PSU-001 v1.04.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CMO8.spec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RXT-PSU-001 v1.01.spec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RXT-PSU-001 v1.02.spec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/CMO8/Analysis-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/CMO8/CMO8.pkg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/CMO8/EXE-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/CMO8/PKG-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/CMO8/PYZ-00.pyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/CMO8/PYZ-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/CMO8/base_library.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/CMO8/warn-CMO8.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/CMO8/xref-CMO8.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/RXT-PSU-001 v1.01/Analysis-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/RXT-PSU-001 v1.01/EXE-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/RXT-PSU-001 v1.01/PKG-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/RXT-PSU-001 v1.01/PYZ-00.pyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/RXT-PSU-001 v1.01/PYZ-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/RXT-PSU-001 v1.01/RXT-PSU-001 v1.01.pkg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/RXT-PSU-001 v1.01/base_library.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/RXT-PSU-001 v1.01/warn-RXT-PSU-001 v1.01.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/RXT-PSU-001 v1.01/xref-RXT-PSU-001 v1.01.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/RXT-PSU-001 v1.02/Analysis-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/RXT-PSU-001 v1.02/EXE-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/RXT-PSU-001 v1.02/PKG-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/RXT-PSU-001 v1.02/PYZ-00.pyz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/RXT-PSU-001 v1.02/PYZ-00.toc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/RXT-PSU-001 v1.02/RXT-PSU-001 v1.02.pkg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/RXT-PSU-001 v1.02/base_library.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/RXT-PSU-001 v1.02/warn-RXT-PSU-001 v1.02.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/RXT-PSU-001 v1.02/xref-RXT-PSU-001 v1.02.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dist/RXT-PSU-001 v1.01.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dist/RXT-PSU-001 v1.02.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/CMO1.spec" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/CMO2.spec" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/CMO3.spec" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/CMO4.spec" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/CMO5.spec" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/CMO6.spec" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/CMO7.spec" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.venv/Main-1.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Main-1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/dist/CMO1.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/dist/CMO2.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/dist/CMO3.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/dist/CMO4.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/dist/CMO5.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/dist/CMO6.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/dist/CMO7.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/build/CMO5/Analysis-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/build/CMO5/Analysis-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/build/CMO5/CMO5.pkg" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/build/CMO5/CMO5.pkg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/build/CMO5/EXE-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/build/CMO5/EXE-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/build/CMO5/PKG-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/build/CMO5/PKG-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/build/CMO5/warn-CMO5.txt" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/build/CMO5/warn-CMO5.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/build/CMO5/xref-CMO5.html" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/build/CMO5/xref-CMO5.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/build/CMO6/Analysis-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/build/CMO6/Analysis-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/build/CMO6/CMO6.pkg" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/build/CMO6/CMO6.pkg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/build/CMO6/EXE-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/build/CMO6/EXE-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/build/CMO6/PKG-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/build/CMO6/PKG-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/build/CMO6/warn-CMO6.txt" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/build/CMO6/warn-CMO6.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/build/CMO6/xref-CMO6.html" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/build/CMO6/xref-CMO6.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/build/CMO7/Analysis-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/build/CMO7/Analysis-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/build/CMO7/CMO7.pkg" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/build/CMO7/CMO7.pkg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/build/CMO7/EXE-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/build/CMO7/EXE-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/build/CMO7/PKG-00.toc" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/build/CMO7/PKG-00.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/build/CMO7/warn-CMO7.txt" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/build/CMO7/warn-CMO7.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/build/CMO7/xref-CMO7.html" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/build/CMO7/xref-CMO7.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/dane_1.csv" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/dane_1.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/dist/Test PSU SP171.exe" beforeDir="false" afterPath="$PROJECT_DIR$/dist/CMO8.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/usuwanie_zlych_excel.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/usuwanie_zlych_excel.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,19 +169,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.Main-1.executor": "Run",
-    "Python.check com7.executor": "Run",
-    "Python.test_limitu_excel.executor": "Run",
-    "Python.usuwanie_zlych_excel.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/Kacper.Urbanowicz/PycharmProjects/PSU-Scanning",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.Main-1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.check com7.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_limitu_excel.executor&quot;: &quot;Run&quot;,
+    &quot;Python.usuwanie_zlych_excel.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Kacper.Urbanowicz/PycharmProjects/PSU-Scanning&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
